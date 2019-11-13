@@ -1,0 +1,28 @@
+>>>>>>> Now running serial execution
+
+GameOfLife: Size 64 Steps 1000 Time 0.020294
+GameOfLife: Size 1024 Steps 1000 Time 11.702536
+GameOfLife: Size 4096 Steps 1000 Time 187.651008
+
+>>>>>>> Now running parallel execution
+
+-------------8 cores 8 threads------------------
+GameOfLife: Size 64 Steps 1000 Time 0.009495
+GameOfLife: Size 1024 Steps 1000 Time 1.030830
+GameOfLife: Size 4096 Steps 1000 Time 34.212546
+
+-------------4 cores 4 threads------------------
+GameOfLife: Size 64 Steps 1000 Time 0.011931
+GameOfLife: Size 1024 Steps 1000 Time 2.030343
+GameOfLife: Size 4096 Steps 1000 Time 34.802137
+
+-------------2 cores 2 threads------------------
+GameOfLife: Size 64 Steps 1000 Time 0.024248
+GameOfLife: Size 1024 Steps 1000 Time 4.078456
+GameOfLife: Size 4096 Steps 1000 Time 67.096481
+
+-------------1 core 1 thread--------------------
+GameOfLife: Size 64 Steps 1000 Time 0.030438
+GameOfLife: Size 1024 Steps 1000 Time 8.218903
+GameOfLife: Size 4096 Steps 1000 Time 133.861986
+
