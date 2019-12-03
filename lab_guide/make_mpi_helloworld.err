@@ -1,0 +1,2 @@
+/var/spool/torque/mom_priv/jobs/395946.localhost.SC: line 20: cd: /home/lab_guide/mpi: No such file or directory
+make: *** No targets specified and no makefile found.  Stop.
