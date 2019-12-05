@@ -1,4 +1,4 @@
-EXECS  = mpi_skeleton
+EXECS  = jacobi_mpi
 MPICXX = mpiCC
 MPIC   = mpicc
 CFLAGS = -Wall -O3 -Wno-unused-variable
@@ -12,11 +12,11 @@ all: ${EXECS}
 
 .PHONY: clean all
 
-mpi_skeleton: $(OBJS) mpi_skeleton.c
-	$(MPIC) $(OBJS) $(OFLAGS) mpi_skeleton.c $(CFLAGS)
+jacobi_mpi: $(OBJS) jacobi_mpi.c
+	$(MPIC) $(OBJS) $(OFLAGS) jacobi_mpi jacobi_mpi.c $(CFLAGS)
 
 %.o: %.c $(HDEPS)
 	$(CC) $(CFLAGS) -c $< $(OFLAGS) $@
 
 clean:
-	rm -f *.o mpi_skeleton
+	rm -f *.o jacobi_mpi
