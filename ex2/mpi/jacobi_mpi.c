@@ -225,7 +225,7 @@ int main(int argc, char ** argv) {
      * 1 on the grid
      * 1 on global padded
      * and we have 4 neighbours
-     * if the neighbour cells are marginal then we will decrease the requests by 2
+     * if the neighbour cells are marginal then we will decrease the recv_req by 2
      */ 
     int number_of_requests = 8;
     
@@ -235,25 +235,25 @@ int main(int argc, char ** argv) {
     j_max = local[1]+1; //this is the max next row you can check the temp
 
 	//************************************//
-	if (north < 0) {    //value is maginal
+	if (north < 0) {    //value is marginal
 		number_of_requests -= 2;
 		i_min++;
 	}
-	if (east < 0) {     //value is maginal
+	if (east < 0) {     //value is marginal
 		number_of_requests -= 2;
-		if (global_padded[1] == 1) //if temp filled here
+		if (global_padded[1] == 1)
 			j_max -= 2;
 		else
 			j_max --;
 	}
-	if (south < 0) {    //value is maginal
+	if (south < 0) {    //value is marginal
 		number_of_requests -= 2;
 		if (global_padded[0] == 1) //if temp filled here
 			i_max -= 2;
 		else
 			i_max--;
 	}
-	if (west < 0) {     //value is maginal
+	if (west < 0) {     //value is marginal
 		number_of_requests -= 2;
 		j_min++;
 	}
@@ -266,9 +266,9 @@ int main(int argc, char ** argv) {
      * it is like a "listening port" 
      * once the request is completed and status updated then the request closes.
      */
-  	MPI_Request * requests = malloc(number_of_requests * sizeof(MPI_Request));
-	MPI_Status * statuses = malloc(number_of_requests * sizeof(MPI_Status));
-
+  	MPI_Request * requests = (MPI_Request *) malloc(number_of_requests * sizeof(MPI_Request));
+	MPI_Status * statuses = (MPI_Status *)malloc(number_of_requests * sizeof(MPI_Status));
+ 
  	//----Computational core----//   
 	gettimeofday(&tts, NULL);
     #ifdef TEST_CONV
@@ -283,15 +283,72 @@ int main(int argc, char ** argv) {
 
 	 	//*************TODO*******************//
      
- 
+        double * neighborsbuff = (double*)malloc(max(local[0],local[1])*sizeof(double));
+        int* coords = (int *)malloc(2*sizeof(int));
+        int global_Xcoord = coords[0]*local[0];
+        int global_Ycoord = coords[1]*local[1];
+        
+        int counter = number_of_requests;
+        if (north >= 0){
 
+            for (i=0; i<local[0]; ++i){
+                MPI_Cart_coords(MPI_CART, rank, 2, coords);
+                neighborsbuff[i] = U[global_Xcoord][global_Ycoord+i];
+            }
 
+            MPI_Isend(neighborsbuff, local[0], proc_data, north, 0, CART_COMM, &requests[counter++]);
+        }        
+        if (south >= 0){
+
+            for (i=0; i<local[0]; ++i){
+                MPI_Cart_coords(MPI_CART, rank, 2, coords);
+                neighborsbuff[i] = U[global_Xcoord+local[0]][global_Ycoord+i];
+            }
+
+            MPI_Isend(neighborsbuff, local[0], proc_data, north, 0, CART_COMM, &requests[counter++]);
+        }
+        if (west >= 0){
+
+            for (i=0; i<local[1]; ++i){
+                MPI_Cart_coords(MPI_CART, rank, 2, coords);
+                neighborsbuff[i] = U[global_Xcoord+i][global_Ycoord];
+            }
+
+            MPI_Isend(neighborsbuff, local[1], proc_data, north, 0, CART_COMM, &requests[counter++]);
+
+        }
+        if (east >= 0){
+
+            for (i=0; i<local[1]; ++i){
+                MPI_Cart_coords(MPI_CART, rank, 2, coords);
+                neighborsbuff[i] = U[global_Xcoord+i][global_Ycoord+local[1]];
+            }
+
+            MPI_Isend(neighborsbuff, local[1], proc_data, north, 0, CART_COMM, &requests[counter++]);    
+        }
 
 
 		/*Fill your code here*/
+        
+        double * west_data  = (double*)malloc(local[1]*sizeof(double));
+        double * east_data  = (double*)malloc(local[1]*sizeof(double));
+        double * north_data = (double*)malloc(local[0]*sizeof(double));
+        double * south_data = (double*)malloc(local[0]*sizeof(double));
 
-
+        if (west >= 0)
+            MPI_Irecv(west_data, local[1],proc_data,west,0,MPI_CART,&requests[counter++]);
+        if (west >= 0)
+            MPI_Irecv(east_data, local[1],proc_data,east,0,MPI_CART,&requests[counter++]);
+        if (west >= 0)
+            MPI_Irecv(north_data, local[0],proc_data,north,0,MPI_CART,&requests[counter++]);
+        if (west >= 0)
+            MPI_Irecv(south_data, local[0],proc_data,south,0,MPI_CART,&requests[counter++]);
+        
+        MPI_Waitall(number_of_requests, requests, statuses);
 		/*Compute and Communicate*/
+
+        
+
 
 		/*Add appropriate timers for computation*/
 	
@@ -341,7 +398,7 @@ int main(int argc, char ** argv) {
     //----Rank 0 gathers local matrices back to the global matrix----//
    
     if (rank==0) {
-            U=allocate2d(global_padded[0],global_padded[1]);
+        U=allocate2d(global_padded[0],global_padded[1]);
     }
 
 
