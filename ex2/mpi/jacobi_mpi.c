@@ -6,6 +6,10 @@
 #include "utils.h"
 #include "/usr/include/mpi/mpi.h"
 
+#define TEST_CONV
+
+void Jacobi(double ** u_previous, double ** u_current, int X_min, int X_max, int Y_min, int Y_max);
+
 int main(int argc, char ** argv) {
     int rank,size;
     int global[2],local[2]; //global matrix dimensions and local matrix dimensions (2D-domain, 2D-subdomain)
@@ -177,21 +181,21 @@ int main(int argc, char ** argv) {
     // https://www.mpich.org/static/docs/latest/www3/MPI_Type_create_resized.html
     // https://www.mpi-forum.org/docs/mpi-2.2/mpi22-report/node75.htm#Node75
     
-    MPI_Datatype proc_data;
+    MPI_Datatype column;
     MPI_Type_vector(local[0]+2, 1, local[1]+2, MPI_DOUBLE, &dummy);
-    MPI_Type_create_resized(dummy,0,sizeof(double),&proc_data);
-    MPI_Type_commit(&proc_data);
-
+    MPI_Type_create_resized(dummy,0,sizeof(double),&column);
+    MPI_Type_commit(&column);
     // MPI_Type_create_subarray ????
-
-	//************************************//
-
 
     //----Find the 4 neighbors with which a process exchanges messages----//
 
-	//*************TODO*******************//
     int north, south, east, west;
 
+	/*
+	 * 
+	 * THIS IS THE ONLY USE OF THE CARTESIAN COMMUNICATOR
+     *
+	 */
     /* MPI_Cart_shift - Returns the shifted source and destination ranks, given a shift direction and amount
      * int MPI_Cart_shift(MPI_Comm comm, int direction, int disp, int *rank_source, int *rank_dest)
      * comm - communicator with cartesian structure (handle)
@@ -204,16 +208,13 @@ int main(int argc, char ** argv) {
 
 	/*Make sure you handle non-existing neighbors appropriately*/
 
-
     //---Define the iteration ranges per process-----//
-	//*************TODO*******************//
 
 	/*Three types of ranges:
 		- internal processes
 		- boundary processes
 		- boundary processes and padded global array
 	*/
-
     int i_min;
     int i_max;
     int j_min;
@@ -222,8 +223,8 @@ int main(int argc, char ** argv) {
     /* 
      * we will ask for MAX 8 cells to be sent to us
      * for each cell we need:
-     * 1 on the grid
-     * 1 on global padded
+     * 1 request for send
+     * 1 request for receiv
      * and we have 4 neighbours
      * if the neighbour cells are marginal then we will decrease the recv_req by 2
      */ 
@@ -258,8 +259,8 @@ int main(int argc, char ** argv) {
 		j_min++;
 	}
 
-    int * convergence = malloc(sizeof(int));
-    int * global_convergce = malloc(sizeof(int));
+    int * converged_arr = malloc(sizeof(int));
+    int * global_converged_arr = malloc(sizeof(int));
 
     /* 
      * to establish a communication we should first open a request and a status.
@@ -280,110 +281,61 @@ int main(int argc, char ** argv) {
     for (t=0;t<T;t++) {
     #endif
 
-
-	 	//*************TODO*******************//
-     
-        double * neighborsbuff = (double*)malloc(max(local[0],local[1])*sizeof(double));
-        int* coords = (int *)malloc(2*sizeof(int));
-        int global_Xcoord = coords[0]*local[0];
-        int global_Ycoord = coords[1]*local[1];
-        
-        int counter = number_of_requests;
-        if (north >= 0){
-
-            for (i=0; i<local[0]; ++i){
-                MPI_Cart_coords(MPI_CART, rank, 2, coords);
-                neighborsbuff[i] = U[global_Xcoord][global_Ycoord+i];
-            }
-
-            MPI_Isend(neighborsbuff, local[0], proc_data, north, 0, CART_COMM, &requests[counter++]);
-        }        
-        if (south >= 0){
-
-            for (i=0; i<local[0]; ++i){
-                MPI_Cart_coords(MPI_CART, rank, 2, coords);
-                neighborsbuff[i] = U[global_Xcoord+local[0]][global_Ycoord+i];
-            }
-
-            MPI_Isend(neighborsbuff, local[0], proc_data, north, 0, CART_COMM, &requests[counter++]);
-        }
-        if (west >= 0){
-
-            for (i=0; i<local[1]; ++i){
-                MPI_Cart_coords(MPI_CART, rank, 2, coords);
-                neighborsbuff[i] = U[global_Xcoord+i][global_Ycoord];
-            }
-
-            MPI_Isend(neighborsbuff, local[1], proc_data, north, 0, CART_COMM, &requests[counter++]);
-
-        }
-        if (east >= 0){
-
-            for (i=0; i<local[1]; ++i){
-                MPI_Cart_coords(MPI_CART, rank, 2, coords);
-                neighborsbuff[i] = U[global_Xcoord+i][global_Ycoord+local[1]];
-            }
-
-            MPI_Isend(neighborsbuff, local[1], proc_data, north, 0, CART_COMM, &requests[counter++]);    
-        }
-
-
-		/*Fill your code here*/
-        
-        double * west_data  = (double*)malloc(local[1]*sizeof(double));
-        double * east_data  = (double*)malloc(local[1]*sizeof(double));
-        double * north_data = (double*)malloc(local[0]*sizeof(double));
-        double * south_data = (double*)malloc(local[0]*sizeof(double));
-
-        if (west >= 0)
-            MPI_Irecv(west_data, local[1],proc_data,west,0,MPI_CART,&requests[counter++]);
-        if (west >= 0)
-            MPI_Irecv(east_data, local[1],proc_data,east,0,MPI_CART,&requests[counter++]);
-        if (west >= 0)
-            MPI_Irecv(north_data, local[0],proc_data,north,0,MPI_CART,&requests[counter++]);
-        if (west >= 0)
-            MPI_Irecv(south_data, local[0],proc_data,south,0,MPI_CART,&requests[counter++]);
-        
-        MPI_Waitall(number_of_requests, requests, statuses);
 		/*Compute and Communicate*/
-
         
-
-
-		/*Add appropriate timers for computation*/
-	
-
+        // keep the latest values of the temperatures
+		swap=u_previous;
+		u_previous=u_current;
+		u_current=swap;   
 		
+		number_of_requests = 0; //start counting requests
+
+		gettimeofday(&tcs,NULL); //timers for prerformance
+
+		Jacobi(u_previous,u_current,i_min,i_max,j_min,j_max); //check convergence
+
+		gettimeofday(&tcf,NULL);
+		tcomp+=(tcf.tv_sec-tcs.tv_sec)+(tcf.tv_usec-tcs.tv_usec)*0.000001;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+        /*  
+         *  every process does an asynchronous send and receive to save time 
+         *  sends to and receives from the corresponding neighbour if he exists
+         *  there is no need to send - wait - recv - wait, since asynchronous offers a better result
+         *  we perform them together and use as a tag variable "t", depicting time step / generation
+		 */
+        if (north >= 0) {
+			MPI_Isend(&u_current[1][0], local[1] + 2, MPI_DOUBLE, north, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+			MPI_Irecv(&u_current[0][0], local[1] + 2, MPI_DOUBLE, north, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+		}		
+		if (south >= 0) {
+			MPI_Isend(&u_current[local[0]][0], local[1] + 2, MPI_DOUBLE, south, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+			MPI_Irecv(&u_current[local[0]+1][0], local[1] + 2, MPI_DOUBLE, south, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+		}
+		if (east >= 0) {
+			MPI_Isend(&u_current[0][local[1]], 1, column, east, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+			MPI_Irecv(&u_current[0][local[1]+1], 1, column, east, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+		}
+		if (west >= 0) {
+			MPI_Isend(&u_current[0][1], 1, column, west, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+			MPI_Irecv(&u_current[0][0], 1, column, west, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+		}
+		MPI_Waitall(number_of_requests, requests, statuses);
 
 
 		#ifdef TEST_CONV
         if (t%C==0) {
-			//*************TODO**************//
-			/*Test convergence*/
-
-
+			// Test convergence
+            converged = converge(u_previous, u_current, i_max, j_max);
+            // store result /*DISCLAIMER: converged_arr is an array of 1 element*/
+            converged_arr[0] = converged;
+            // gather all converged together on root
+            MPI_Reduce(&converged_arr[0], &global_converged_arr[0], 1, MPI_INT, MPI_PROD, 0, MPI_COMM_WORLD);
+            MPI_Bcast(&global_converged_arr[0], 1, MPI_INT, 0, MPI_COMM_WORLD);
+            // set local loop variable
+            global_converged = global_converged_arr[0];
 		}		
-		#endif
-
-
-		//************************************//
- 
-         
+		#endif         
         
     }
     gettimeofday(&ttf,NULL);
@@ -394,34 +346,28 @@ int main(int argc, char ** argv) {
     MPI_Reduce(&tcomp,&comp_time,1,MPI_DOUBLE,MPI_MAX,0,MPI_COMM_WORLD);
 
 
-
     //----Rank 0 gathers local matrices back to the global matrix----//
-   
+
     if (rank==0) {
         U=allocate2d(global_padded[0],global_padded[1]);
+        sendbuf = &U[0][0]; //its actually the recvbuff for the next collective operation: MPI_Gatherv
     }
 
-
-	//*************TODO*******************//
-
-
-
-	/*Fill your code here*/
-
-
-
-
-
-
-
-
-
-
-     //************************************//
-
-
-	
-   
+    /*
+     * EVERYONE performs this operation
+     * only the specified as root proc gathers the data
+     * everyone else sends the sendbuf
+     */
+    MPI_Gatherv(&u_current[1][1]    // send buffer (id != 0)
+                ,1                  // number of elements in send buffer (id != 0) 
+                ,local_block        // data type (id != 0)
+                ,sendbuf            // receive buffer (id == 0)
+                ,scattercounts      // number of elements in receive buffer (id == 0)
+                ,scatteroffset      // offset for everyproc (id != 0)
+                ,global_block       // receive datatype (id == 0)
+                ,0                  // root proc id (id == 0)
+                ,MPI_COMM_WORLD     // communicator
+                );
 
 	//----Printing results----//
 
@@ -439,4 +385,11 @@ int main(int argc, char ** argv) {
     }
     MPI_Finalize();
     return 0;
+}
+
+void Jacobi(double ** u_previous, double ** u_current, int X_min, int X_max, int Y_min, int Y_max) {
+	int i,j;
+	for (i=X_min;i<X_max;i++)
+		for (j=Y_min;j<Y_max;j++)
+			u_current[i][j]=(u_previous[i-1][j]+u_previous[i+1][j]+u_previous[i][j-1]+u_previous[i][j+1])/4.0;
 }
