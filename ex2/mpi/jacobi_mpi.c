@@ -262,17 +262,11 @@ int main(int argc, char ** argv) {
     int * converged_arr = malloc(sizeof(int));
     int * global_converged_arr = malloc(sizeof(int));
 
-    double * northbuffer;
-    double * southbuffer; 
-    double * westbuffer;
-    double * eastbuffer;
-	//tmp = ( double * )calloc( dimX * dimY, sizeof( double ) );
-    
-    northbuffer = ( double * )calloc( local[0], sizeof( double ) );
-    southbuffer = ( double * )calloc( local[0], sizeof( double ) );
 
-    westbuffer  = ( double * )calloc( local[1], sizeof( double ) );
-    eastbuffer  = ( double * )calloc( local[1], sizeof( double ) );
+    double * northbuffer = ( double * )calloc( local[0], sizeof( double ) );
+    double * southbuffer = ( double * )calloc( local[0], sizeof( double ) );
+    double * westbuffer  = ( double * )calloc( local[1], sizeof( double ) );
+    double * eastbuffer  = ( double * )calloc( local[1], sizeof( double ) );
 
     /* 
      * to establish a communication we should first open a request and a status.
