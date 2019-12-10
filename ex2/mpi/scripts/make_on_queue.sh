@@ -1,11 +1,11 @@
 #!/bin/bash
 
 ## Give the Job a descriptive name
-#PBS -N make_mpi_helloworld
+#PBS -N make_mpi_jacobi
 
 ## Output and error files
-#PBS -o make_mpi_helloworld.out
-#PBS -e make_mpi_helloworld.err
+#PBS -o mpi/make_mpi_jacobi.out
+#PBS -e mpi/make_mpi_jacobi.err
 
 ## How many machines should we get?
 #PBS -l nodes=1:ppn=1
@@ -19,5 +19,4 @@
 module load openmpi/1.8.3
 cd /home/parallel/parlab30/a2/mpi
 make
-
 
