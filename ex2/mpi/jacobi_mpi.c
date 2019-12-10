@@ -196,6 +196,7 @@ int main(int argc, char ** argv) {
 	 * THIS IS THE ONLY USE OF THE CARTESIAN COMMUNICATOR
      *
 	 */
+
     /* MPI_Cart_shift - Returns the shifted source and destination ranks, given a shift direction and amount
      * int MPI_Cart_shift(MPI_Comm comm, int direction, int disp, int *rank_source, int *rank_dest)
      * comm - communicator with cartesian structure (handle)
@@ -263,10 +264,10 @@ int main(int argc, char ** argv) {
     int * global_converged_arr = malloc(sizeof(int));
 
 
-    double * northbuffer = ( double * )calloc( local[0], sizeof( double ) );
-    double * southbuffer = ( double * )calloc( local[0], sizeof( double ) );
-    double * westbuffer  = ( double * )calloc( local[1], sizeof( double ) );
-    double * eastbuffer  = ( double * )calloc( local[1], sizeof( double ) );
+    double * northbuffer = ( double * )calloc( local[1] + 2, sizeof( double ) );
+    double * southbuffer = ( double * )calloc( local[1] + 2, sizeof( double ) );
+    double * westbuffer  = ( double * )calloc( local[0] + 2, sizeof( double ) );
+    double * eastbuffer  = ( double * )calloc( local[0] + 2, sizeof( double ) );
 
     /* 
      * to establish a communication we should first open a request and a status.
@@ -310,21 +311,27 @@ int main(int argc, char ** argv) {
          *  there is no need to send - wait - recv - wait, since asynchronous offers a better result
          *  we perform them together and use as a tag variable "t", depicting time step / generation
 		 */
+
+        // northbuffer : 1D array with size local[1]+2
+        // southbuffer : 1D array with size local[1]+2
+        // westbuffer  : 1D array with size local[0]+2
+        // eastbuffer  : 1D array with size local[0]+2
+
         if (north >= 0) {
-            MPI_Isend(&u_current[1][0], local[1] + 2, MPI_DOUBLE, north, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
-            MPI_Irecv(&u_current[0][0], local[1] + 2, MPI_DOUBLE, north, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+            MPI_Isend(&u_current[1][0]       , local[1] + 2, MPI_DOUBLE, north, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+            MPI_Irecv(&northbuffer           , local[1] + 2, MPI_DOUBLE, north, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
         }		
         if (south >= 0) {
-            MPI_Isend(&u_current[local[0]   ][0], local[1] + 2, MPI_DOUBLE, south, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
-            MPI_Irecv(&u_current[local[0]+1 ][0], local[1] + 2, MPI_DOUBLE, south, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+            MPI_Isend(&u_current[local[0]][0], local[1] + 2, MPI_DOUBLE, south, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+            MPI_Irecv(&southbuffer           , local[1] + 2, MPI_DOUBLE, south, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
         }
         if (east >= 0) {
-            MPI_Isend(&u_current[0][local[1]    ], 1, column, east, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
-            MPI_Irecv(&u_current[0][local[1]+1  ], 1, column, east, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+            MPI_Isend(&u_current[0][local[1]], 1, column, east, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+            MPI_Irecv(&eastbuffer            , 1, column, east, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
         }
         if (west >= 0) {
-            MPI_Isend(&u_current[0][1], 1, column, west, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
-            MPI_Irecv(&u_current[0][0], 1, column, west, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+            MPI_Isend(&u_current[0][1]       , 1, column, west, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+            MPI_Irecv(&westbuffer            , 1, column, west, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
         }
         MPI_Waitall(number_of_requests, requests, statuses);
 
