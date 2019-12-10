@@ -401,8 +401,8 @@ int main(int argc, char ** argv) {
 }
 
 void Jacobi(double ** u_previous, double ** u_current, int X_min, int X_max, int Y_min, int Y_max) {
-	int i,j;
-	for (i=X_min;i<X_max;i++)
-		for (j=Y_min;j<Y_max;j++)
-			u_current[i][j]=(u_previous[i-1][j]+u_previous[i+1][j]+u_previous[i][j-1]+u_previous[i][j+1])/4.0;
+    int i,j;
+    for (i=X_min;i<X_max;i++)
+        for (j=Y_min;j<Y_max;j++)
+            u_current[i][j]=(u_previous[i-1][j]+u_previous[i+1][j]+u_previous[i][j-1]+u_previous[i][j+1])/4.0;
 }
