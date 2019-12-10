@@ -41,6 +41,11 @@ void free2d( double ** array) {
         free(array);
 }
 
+// void init1d ( double * array, int dimX ) {
+// 	int i;
+// 	for ( i = 0 ; i < dimX ; ++i )
+// 		array[i] = 0;
+// }
 
 void init2d ( double ** array, int dimX, int dimY ) {
 	int i,j;
