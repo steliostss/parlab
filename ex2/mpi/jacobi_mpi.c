@@ -382,9 +382,9 @@ int main(int argc, char ** argv) {
                 ,MPI_COMM_WORLD     // communicator
                 );
 
-	//----Printing results----//
+    //----Printing results----//
 
-	//**************TODO: Change "Jacobi" to "GaussSeidelSOR" or "RedBlackSOR" for appropriate printing****************//
+    //**************TODO: Change "Jacobi" to "GaussSeidelSOR" or "RedBlackSOR" for appropriate printing****************//
     if (rank==0) {
         printf("Jacobi X %d Y %d Px %d Py %d Iter %d ComputationTime %lf TotalTime %lf midpoint %lf\n",global[0],global[1],grid[0],grid[1],t,comp_time,total_time,U[global[0]/2][global[1]/2]);
 	
