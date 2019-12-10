@@ -293,15 +293,10 @@ int main(int argc, char ** argv) {
         /*Compute and Communicate*/
         
         // keep the latest values of the temperatures
-        swap=u_previous;
-        u_previous=u_current;
-        u_current=swap;   
-        
+
         number_of_requests = 0; //start counting requests
 
         gettimeofday(&tcs,NULL); //timers for prerformance
-
-        Jacobi(u_previous,u_current,i_min,i_max,j_min,j_max); //check convergence
 
         gettimeofday(&tcf,NULL);
         tcomp+=(tcf.tv_sec-tcs.tv_sec)+(tcf.tv_usec-tcs.tv_usec)*0.000001;
@@ -337,6 +332,11 @@ int main(int argc, char ** argv) {
         }
         MPI_Waitall(number_of_requests, requests, statuses);
 
+        Jacobi(u_previous,u_current,i_min,i_max,j_min,j_max); //check convergence
+
+        swap=u_previous;
+        u_previous=u_current;
+        u_current=swap;
 
         #ifdef TEST_CONV
         if (t%C==0) {
