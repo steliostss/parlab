@@ -1,3 +1,5 @@
 .vscode/
 
 ex2/mpi/myfiles/
+ex2/mpi/jacobi_mpi 
+ex2/mpi/utils.o
