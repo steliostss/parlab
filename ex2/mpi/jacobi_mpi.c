@@ -331,7 +331,7 @@ int main(int argc, char ** argv) {
 
 		#ifdef TEST_CONV
         if (t%C==0) {
-			// Test convergence
+            // Test convergence
             converged = converge(u_previous, u_current, i_max, j_max);
             // store result /*DISCLAIMER: converged_arr is an array of 1 element*/
             converged_arr[0] = converged;
@@ -340,8 +340,8 @@ int main(int argc, char ** argv) {
             MPI_Bcast(&global_converged_arr[0], 1, MPI_INT, 0, MPI_COMM_WORLD);
             // set local loop variable
             global_converged = global_converged_arr[0];
-		}		
-		#endif         
+        }		
+        #endif         
         
     }
     gettimeofday(&ttf,NULL);
