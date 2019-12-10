@@ -21,7 +21,7 @@ int main(int argc, char ** argv) {
     int converged=0;        //convergence per process 
 
     MPI_Datatype dummy;     //dummy datatype used to align user-defined datatypes in memory
-    double omega; 			//relaxation factor - useless for Jacobi
+    double omega;           //relaxation factor - useless for Jacobi
 
     struct timeval tts,ttf,tcs,tcf;   //Timers: total-> tts,ttf, computation -> tcs,tcf
     double ttotal=0,tcomp=0,total_time,comp_time;
@@ -47,7 +47,7 @@ int main(int argc, char ** argv) {
     }
 
     //----Create 2D-cartesian communicator----//
-	//----Usage of the cartesian communicator is optional----//
+    //----Usage of the cartesian communicator is optional----//
 
     MPI_Comm CART_COMM;         //CART_COMM: the new 2D-cartesian communicator
     int periods[2]={0,0};       //periods={0,0}: the 2D-grid is non-periodic
@@ -162,20 +162,20 @@ int main(int argc, char ** argv) {
      */
     MPI_Scatterv(sendbuf, scattercounts, scatteroffset, global_block, &u_current[1][1], 1, local_block, 0, MPI_COMM_WORLD);
 
-	/*Make sure u_current and u_previous are both initialized*/
+    /*Make sure u_current and u_previous are both initialized*/
 
     // We use the init2d function from utils.c to initialize the variables
     init2d(u_previous, local[0]+2, local[1]+2);
     init2d(u_current, local[0]+2, local[1]+2);
 
 
-     //************************************//
+    //************************************//
 
 
     if (rank==0)
         free2d(U);
 
-	//----Define datatypes or allocate buffers for message passing----//
+    //----Define datatypes or allocate buffers for message passing----//
 
     // Documentation of why we use MPI_Type_create_resized 
     // https://www.mpich.org/static/docs/latest/www3/MPI_Type_create_resized.html
@@ -211,11 +211,11 @@ int main(int argc, char ** argv) {
 
     //---Define the iteration ranges per process-----//
 
-	/*Three types of ranges:
-		- internal processes
-		- boundary processes
-		- boundary processes and padded global array
-	*/
+    /*Three types of ranges:
+        - internal processes
+        - boundary processes
+        - boundary processes and padded global array
+    */
     int i_min;
     int i_max;
     int j_min;
@@ -236,29 +236,29 @@ int main(int argc, char ** argv) {
     j_min = 1;          //this is the min previous row you can check the temp
     j_max = local[1]+1; //this is the max next row you can check the temp
 
-	//************************************//
-	if (north < 0) {    //value is marginal
-		number_of_requests -= 2;
-		i_min++;
-	}
-	if (east < 0) {     //value is marginal
-		number_of_requests -= 2;
-		if (global_padded[1] == 1)
-			j_max -= 2;
-		else
-			j_max --;
-	}
-	if (south < 0) {    //value is marginal
-		number_of_requests -= 2;
-		if (global_padded[0] == 1) //if temp filled here
-			i_max -= 2;
-		else
-			i_max--;
-	}
-	if (west < 0) {     //value is marginal
-		number_of_requests -= 2;
-		j_min++;
-	}
+    //************************************//
+    if (north < 0) {    //value is marginal
+        number_of_requests -= 2;
+        i_min++;
+    }
+    if (east < 0) {     //value is marginal
+        number_of_requests -= 2;
+        if (global_padded[1] == 1)
+            j_max -= 2;
+        else
+            j_max --;
+    }
+    if (south < 0) {    //value is marginal
+        number_of_requests -= 2;
+        if (global_padded[0] == 1) //if temp filled here
+            i_max -= 2;
+        else
+            i_max--;
+    }
+    if (west < 0) {     //value is marginal
+        number_of_requests -= 2;
+        j_min++;
+    }
 
     int * converged_arr = malloc(sizeof(int));
     int * global_converged_arr = malloc(sizeof(int));
@@ -274,11 +274,11 @@ int main(int argc, char ** argv) {
      * it is like a "listening port" 
      * once the request is completed and status updated then the request closes.
      */
-  	MPI_Request * requests = (MPI_Request *) malloc(number_of_requests * sizeof(MPI_Request));
-	MPI_Status * statuses = (MPI_Status *)malloc(number_of_requests * sizeof(MPI_Status));
- 
- 	//----Computational core----//   
-	gettimeofday(&tts, NULL);
+    MPI_Request * requests = (MPI_Request *) malloc(number_of_requests * sizeof(MPI_Request));
+    MPI_Status * statuses = (MPI_Status *)malloc(number_of_requests * sizeof(MPI_Status));
+
+    //----Computational core----//   
+    gettimeofday(&tts, NULL);
     #ifdef TEST_CONV
     for (t=0;t<T && !global_converged;t++) {
     #endif
@@ -288,7 +288,7 @@ int main(int argc, char ** argv) {
     for (t=0;t<T;t++) {
     #endif
 
-		/*Compute and Communicate*/
+        /*Compute and Communicate*/
         
         // keep the latest values of the temperatures
         swap=u_previous;
