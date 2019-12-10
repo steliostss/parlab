@@ -1,7 +1,10 @@
 # Parallel Processing Systems Laboratory
 
-Lorem ipsum
-
+This repository is for the assignments of year 2019-2020.
+The course is: "Parallel Processing Systems"
+Teacher:
+- Georgios Goumas
+ 
 ### Team Members
-- Nikos Tsakas
-- Stelios Tsagkarakis
+- [Nikos Tsakas](https://github.com/ZeptrodOglyvox)
+- [Stelios Tsagkarakis](https://github.com/steliostss)
