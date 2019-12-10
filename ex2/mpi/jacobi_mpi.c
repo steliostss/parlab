@@ -310,7 +310,7 @@ int main(int argc, char ** argv) {
          *  sends to and receives from the corresponding neighbour if he exists
          *  there is no need to send - wait - recv - wait, since asynchronous offers a better result
          *  we perform them together and use as a tag variable "t", depicting time step / generation
-		 */
+         */
 
         // northbuffer : 1D array with size local[1]+2
         // southbuffer : 1D array with size local[1]+2
