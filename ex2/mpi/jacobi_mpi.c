@@ -336,7 +336,7 @@ int main(int argc, char ** argv) {
         u_previous=u_current;
         u_current=swap;
 
-        Jacobi(u_previous,u_current,i_min,i_max,j_min,j_max); //check convergence
+        Jacobi(u_previous,u_current,i_min,i_max,j_min,j_max, northbuffer, southbuffer, eastbuffer, westbuffer); //check convergence
 
         #ifdef TEST_CONV
         if (t%C==0) {
