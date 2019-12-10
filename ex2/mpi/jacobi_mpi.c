@@ -9,9 +9,12 @@
 #define TEST_CONV
 
 // void Jacobi(double ** u_previous, double ** u_current, int X_min, int X_max, int Y_min, int Y_max);
-void Jacobi(double ** u_previous, double ** u_current, 
+void Jacobi_old(double ** u_previous, double ** u_current, 
 	int X_min, int X_max, int Y_min, int Y_max, 
 	double * north_data, double * south_data, double * east_data, double * west_data);
+
+void Jacobi(double ** u_previous, double ** u_current, int X_min, int X_max, int Y_min, int Y_max);
+
 int main(int argc, char ** argv) {
     int rank,size;
     int global[2],local[2]; //global matrix dimensions and local matrix dimensions (2D-domain, 2D-subdomain)
@@ -298,6 +301,12 @@ int main(int argc, char ** argv) {
 
         gettimeofday(&tcs,NULL); //timers for prerformance
 
+        swap=u_previous;
+        u_previous=u_current;
+        u_current=swap;
+
+        Jacobi(u_previous,u_current,i_min,i_max,j_min,j_max); //check convergence
+
         gettimeofday(&tcf,NULL);
         tcomp+=(tcf.tv_sec-tcs.tv_sec)+(tcf.tv_usec-tcs.tv_usec)*0.000001;
 
@@ -314,29 +323,25 @@ int main(int argc, char ** argv) {
         // westbuffer  : 1D array with size local[0]+2
         // eastbuffer  : 1D array with size local[0]+2
 
+
         if (north >= 0) {
-            MPI_Isend(&u_current[1][0]       , local[1] + 2, MPI_DOUBLE, north, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
-            MPI_Irecv(&northbuffer           , local[1] + 2, MPI_DOUBLE, north, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+            MPI_Isend(&u_current[1][0]          , local[1] + 2, MPI_DOUBLE, north, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+            MPI_Irecv(&u_current[0][0]          , local[1] + 2, MPI_DOUBLE, north, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
         }		
         if (south >= 0) {
-            MPI_Isend(&u_current[local[0]][0], local[1] + 2, MPI_DOUBLE, south, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
-            MPI_Irecv(&southbuffer           , local[1] + 2, MPI_DOUBLE, south, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+            MPI_Isend(&u_current[local[0]-1][0] , local[1] + 2, MPI_DOUBLE, south, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+            MPI_Irecv(&u_current[local[0]][0]   , local[1] + 2, MPI_DOUBLE, south, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
         }
         if (east >= 0) {
-            MPI_Isend(&u_current[0][local[1]], 1, column, east, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
-            MPI_Irecv(&eastbuffer            , 1, column, east, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+            MPI_Isend(&u_current[0][local[1]-1] , 1, column, east, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+            MPI_Irecv(&u_current[0][local[1]]   , 1, column, east, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
         }
         if (west >= 0) {
-            MPI_Isend(&u_current[0][1]       , 1, column, west, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
-            MPI_Irecv(&westbuffer            , 1, column, west, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+            MPI_Isend(&u_current[0][1]          , 1, column, west, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+            MPI_Irecv(&u_current[0][0]          , 1, column, west, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
         }
         MPI_Waitall(number_of_requests, requests, statuses);
 
-        swap=u_previous;
-        u_previous=u_current;
-        u_current=swap;
-
-        Jacobi(u_previous,u_current,i_min,i_max,j_min,j_max, northbuffer, southbuffer, eastbuffer, westbuffer); //check convergence
 
         #ifdef TEST_CONV
         if (t%C==0) {
@@ -402,7 +407,14 @@ int main(int argc, char ** argv) {
     return 0;
 }
 
-void Jacobi(double ** u_previous, double ** u_current, 
+void Jacobi(double ** u_previous, double ** u_current, int X_min, int X_max, int Y_min, int Y_max) {
+    int i,j;
+    for (i=X_min;i<X_max;i++)
+        for (j=Y_min;j<Y_max;j++)
+            u_current[i][j]=(u_previous[i-1][j]+u_previous[i+1][j]+u_previous[i][j-1]+u_previous[i][j+1])/4.0;
+}
+
+void Jacobi_old(double ** u_previous, double ** u_current, 
             int X_min, int X_max, int Y_min, int Y_max,
             double * north_data, double * south_data, 
             double * east_data, double * west_data)
