@@ -308,19 +308,19 @@ int main(int argc, char ** argv) {
 			MPI_Isend(&u_current[1][0], local[1] + 2, MPI_DOUBLE, north, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
 			MPI_Irecv(&u_current[0][0], local[1] + 2, MPI_DOUBLE, north, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
 		}		
-		if (south >= 0) {
-			MPI_Isend(&u_current[local[0]][0], local[1] + 2, MPI_DOUBLE, south, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
-			MPI_Irecv(&u_current[local[0]+1][0], local[1] + 2, MPI_DOUBLE, south, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
-		}
-		if (east >= 0) {
-			MPI_Isend(&u_current[0][local[1]], 1, column, east, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
-			MPI_Irecv(&u_current[0][local[1]+1], 1, column, east, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
-		}
-		if (west >= 0) {
-			MPI_Isend(&u_current[0][1], 1, column, west, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
-			MPI_Irecv(&u_current[0][0], 1, column, west, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
-		}
-		MPI_Waitall(number_of_requests, requests, statuses);
+        if (south >= 0) {
+            MPI_Isend(&u_current[local[0]][0], local[1] + 2, MPI_DOUBLE, south, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+            MPI_Irecv(&u_current[local[0]+1][0], local[1] + 2, MPI_DOUBLE, south, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+        }
+        if (east >= 0) {
+            MPI_Isend(&u_current[0][local[1]], 1, column, east, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+            MPI_Irecv(&u_current[0][local[1]+1], 1, column, east, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+        }
+        if (west >= 0) {
+            MPI_Isend(&u_current[0][1], 1, column, west, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+            MPI_Irecv(&u_current[0][0], 1, column, west, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+        }
+        MPI_Waitall(number_of_requests, requests, statuses);
 
 
 		#ifdef TEST_CONV
