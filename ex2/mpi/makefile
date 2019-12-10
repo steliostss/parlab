@@ -14,6 +14,7 @@ all: ${EXECS}
 
 jacobi_mpi: $(OBJS) jacobi_mpi.c
 	$(MPIC) $(OBJS) $(OFLAGS) jacobi_mpi jacobi_mpi.c $(CFLAGS)
+	rm *.o
 
 %.o: %.c $(HDEPS)
 	$(CC) $(CFLAGS) -c $< $(OFLAGS) $@
