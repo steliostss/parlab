@@ -332,11 +332,11 @@ int main(int argc, char ** argv) {
         }
         MPI_Waitall(number_of_requests, requests, statuses);
 
-        Jacobi(u_previous,u_current,i_min,i_max,j_min,j_max); //check convergence
-
         swap=u_previous;
         u_previous=u_current;
         u_current=swap;
+
+        Jacobi(u_previous,u_current,i_min,i_max,j_min,j_max); //check convergence
 
         #ifdef TEST_CONV
         if (t%C==0) {
