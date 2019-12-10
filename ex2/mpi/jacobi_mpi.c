@@ -311,9 +311,9 @@ int main(int argc, char ** argv) {
          *  we perform them together and use as a tag variable "t", depicting time step / generation
 		 */
         if (north >= 0) {
-			MPI_Isend(&u_current[1][0], local[1] + 2, MPI_DOUBLE, north, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
-			MPI_Irecv(&u_current[0][0], local[1] + 2, MPI_DOUBLE, north, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
-		}		
+            MPI_Isend(&u_current[1][0], local[1] + 2, MPI_DOUBLE, north, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+            MPI_Irecv(&u_current[0][0], local[1] + 2, MPI_DOUBLE, north, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+        }		
         if (south >= 0) {
             MPI_Isend(&u_current[local[0]   ][0], local[1] + 2, MPI_DOUBLE, south, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
             MPI_Irecv(&u_current[local[0]+1 ][0], local[1] + 2, MPI_DOUBLE, south, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
