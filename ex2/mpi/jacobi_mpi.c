@@ -336,7 +336,7 @@ int main(int argc, char ** argv) {
         MPI_Waitall(number_of_requests, requests, statuses);
 
 
-       #ifdef TEST_CONV
+        #ifdef TEST_CONV
         if (t%C==0) {
             // Test convergence
             converged = converge(u_previous, u_current, i_max, j_max);
