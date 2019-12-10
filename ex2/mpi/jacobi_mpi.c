@@ -8,11 +8,6 @@
 
 #define TEST_CONV
 
-// void Jacobi(double ** u_previous, double ** u_current, int X_min, int X_max, int Y_min, int Y_max);
-void Jacobi_old(double ** u_previous, double ** u_current, 
-	int X_min, int X_max, int Y_min, int Y_max, 
-	double * north_data, double * south_data, double * east_data, double * west_data);
-
 void Jacobi(double ** u_previous, double ** u_current, int X_min, int X_max, int Y_min, int Y_max);
 
 int main(int argc, char ** argv) {
@@ -413,94 +408,3 @@ void Jacobi(double ** u_previous, double ** u_current, int X_min, int X_max, int
         for (j=Y_min;j<Y_max;j++)
             u_current[i][j]=(u_previous[i-1][j]+u_previous[i+1][j]+u_previous[i][j-1]+u_previous[i][j+1])/4.0;
 }
-
-void Jacobi_old(double ** u_previous, double ** u_current, 
-            int X_min, int X_max, int Y_min, int Y_max,
-            double * north_data, double * south_data, 
-            double * east_data, double * west_data)
-{
-	int i,j;
-	int last_right = X_max - X_min - 1;
-	int last_down = Y_max - Y_min - 1;
-
-	// Top Left
-	u_current[X_min][Y_min] = (
-		west_data[0] + 
-		u_previous[X_min+1][Y_min] + 
-		north_data[0] + 
-		u_previous[X_min][Y_min+1]
-	) / 4.0;
-
-	// Top Right
-	u_current[X_max-1][Y_min] = (
-		north_data[last_right] + 
-		u_previous[X_max-1][Y_min+1] + 
-		east_data[0] + 
-		u_previous[X_max-2][Y_min]
-	) / 4.0;
-
-	// Bottom Left
-	u_current[X_min][Y_max-1] = (
-		u_previous[X_min][Y_max-2] + 
-		south_data[0] + 
-		u_previous[X_min+1][Y_max-1] + 
-		west_data[last_down]
-	) / 4.0;
-
-	// Bottom Right
-	u_current[X_max-1][Y_max-1] = (
-		u_previous[X_max-1][Y_max-2] + 
-		south_data[last_right] + 
-		east_data[last_down] + 
-		u_previous[X_max-2][Y_max-1]
-	) / 4.0;
-
-	// Left to Right
-	for (i=X_min+1; i<X_max-1; i++)
-	{
-		u_current[i][Y_min] = (
-			north_data[i-X_min] + 
-			u_previous[i][Y_min+1] + 
-			u_previous[i+1][Y_min] + 
-			u_previous[i-1][Y_min]
-		) / 4.0;
-
-		u_current[i][Y_max-1] = (
-			u_previous[i][Y_max-2] + 
-			south_data[i-X_min] + 
-			u_previous[i+1][Y_max-1] + 
-			u_previous[i-1][Y_max-1]
-		) / 4.0;
-
-	}
-
-	// Top to Bottom
-	for (j=Y_min+1; j<Y_max-1; j++)
-	{
-		u_current[X_min][j] = (
-			u_previous[X_min][j-1] + 
-			u_previous[X_min][j+1] + 
-			u_previous[X_min+1][j] + 
-			west_data[j-Y_min]
-		) / 4.0;
-
-		u_current[X_max-1][j] = (
-			u_previous[X_max-1][j-1] + 
-			u_previous[X_max-1][j+1] + 
-			east_data[j-Y_min] + 
-			u_previous[X_max-2][j]
-		) / 4.0;
-
-	}
-
-	// Everything on the inside
-	for (i=X_min+1;i<X_max-1;i++)
-		for (j=Y_min+1;j<Y_max-1;j++)
-			u_current[i][j]=(
-				u_previous[i-1][j] + 
-				u_previous[i+1][j] +
-				u_previous[i][j-1] + 
-				u_previous[i][j+1]
-			) / 4.0;
-}
-
