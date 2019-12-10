@@ -402,7 +402,10 @@ int main(int argc, char ** argv) {
     return 0;
 }
 
-void Jacobi(double ** u_previous, double ** u_current, int X_min, int X_max, int Y_min, int Y_max, double * north_data, double * south_data, double * east_data, double * west_data)
+void Jacobi(double ** u_previous, double ** u_current, 
+            int X_min, int X_max, int Y_min, int Y_max,
+            double * north_data, double * south_data, 
+            double * east_data, double * west_data)
 {
 	int i,j;
 	int last_right = X_max - X_min - 1;
