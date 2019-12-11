@@ -10,3 +10,5 @@ ex2/mpi/red_black_mpi_conv
 ex2/mpi/red_black_mpi_NO_conv 
 ex2/mpi/gauss_seidel_mpi_NO_conv 
 ex2/mpi/gauss_seidel_mpi_conv
+ex2/mpi/temp
+ex2/temp
