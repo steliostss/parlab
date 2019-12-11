@@ -305,11 +305,9 @@ int main(int argc, char ** argv) {
         u_current=swap;
 
         if (north >= 0) {
-            MPI_Isend(&u_previous[1][0]          , local[1] + 2, MPI_DOUBLE, north, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
             MPI_Irecv(&u_current[0][0]          , local[1] + 2, MPI_DOUBLE, north, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
         }
         if (west >= 0) {
-            MPI_Isend(&u_current[0][1]          , 1, column, west, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
             MPI_Irecv(&u_current[0][0]          , 1, column, west, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
         }
         if (number_of_requests >= 0)
@@ -324,6 +322,12 @@ int main(int argc, char ** argv) {
 
         gettimeofday(&tcf,NULL);
         tcomp+=(tcf.tv_sec-tcs.tv_sec)+(tcf.tv_usec-tcs.tv_usec)*0.000001;
+
+        if (north >= 0) 
+            MPI_Isend(&u_previous[1][0]          , local[1] + 2, MPI_DOUBLE, north, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
+
+        if (west >= 0) 
+            MPI_Isend(&u_current[0][1]          , 1, column, west, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
 
         if (south >= 0) {
             MPI_Isend(&u_current[local[0]  ][0] , local[1] + 2, MPI_DOUBLE, south, t, MPI_COMM_WORLD, &requests[number_of_requests++]);
