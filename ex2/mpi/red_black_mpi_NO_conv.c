@@ -6,9 +6,10 @@
 #include "utils.h"
 #include "/usr/include/mpi/mpi.h"
 
-#define TEST_CONV
+// #define TEST_CONV
 
-void Jacobi(double ** u_previous, double ** u_current, int X_min, int X_max, int Y_min, int Y_max);
+void RedSOR(double ** u_previous, double ** u_current, int X_min, int X_max, int Y_min, int Y_max, int omega);
+void BlackSOR(double ** u_previous, double ** u_current, int X_min, int X_max, int Y_min, int Y_max, int omega);
 
 int main(int argc, char ** argv) {
     int rank,size;
@@ -341,7 +342,7 @@ int main(int argc, char ** argv) {
 
         gettimeofday(&tcs,NULL); //timers for prerformance
 
-        BlackSOR(u_previous,u_current,i_min,i_max,j_min,j_max,omega)
+        BlackSOR(u_previous,u_current,i_min,i_max,j_min,j_max,omega);
 
         gettimeofday(&tcf,NULL);
         tcomp+=(tcf.tv_sec-tcs.tv_sec)+(tcf.tv_usec-tcs.tv_usec)*0.000001;
@@ -416,11 +417,11 @@ int main(int argc, char ** argv) {
 
     //**************TODO: Change "Jacobi" to "GaussSeidelSOR" or "RedBlackSOR" for appropriate printing****************//
     if (rank==0) {
-        printf("Jacobi X %d Y %d Px %d Py %d Iter %d ComputationTime %lf TotalTime %lf midpoint %lf\n",global[0],global[1],grid[0],grid[1],t,comp_time,total_time,U[global[0]/2][global[1]/2]);
+        printf("Red-Black-SOR X %d Y %d Px %d Py %d Iter %d ComputationTime %lf TotalTime %lf midpoint %lf\n",global[0],global[1],grid[0],grid[1],t,comp_time,total_time,U[global[0]/2][global[1]/2]);
 	
         #ifdef PRINT_RESULTS
         char * s=malloc(50*sizeof(char));
-        sprintf(s,"resJacobiMPI_%dx%d_%dx%d",global[0],global[1],grid[0],grid[1]);
+        sprintf(s,"resRedBlackSOR_MPI_%dx%d_%dx%d",global[0],global[1],grid[0],grid[1]);
         fprint2d(s,U,global[0],global[1]);
         free(s);
         #endif
