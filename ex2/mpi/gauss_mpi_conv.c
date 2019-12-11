@@ -318,7 +318,7 @@ int main(int argc, char ** argv) {
 
         gettimeofday(&tcs,NULL); //timers for prerformance
 
-        GaussSeidel(u_previous, u_current, i_min, i_max, j_min, j_max);
+        GaussSeidel(u_previous, u_current, i_min, i_max, j_min, j_max, omega);
 
         gettimeofday(&tcf,NULL);
         tcomp+=(tcf.tv_sec-tcs.tv_sec)+(tcf.tv_usec-tcs.tv_usec)*0.000001;
@@ -406,7 +406,7 @@ int main(int argc, char ** argv) {
     return 0;
 }
 
-void GaussSeidel(double ** u_previous, double ** u_current, int X_min, int X_max, int Y_min, int Y_max) {
+void GaussSeidel(double ** u_previous, double ** u_current, int X_min, int X_max, int Y_min, int Y_max, int omega) {
     int i,j;
     for (i=X_min;i<X_max;i++)
         for (j=Y_min;j<Y_max;j++)
