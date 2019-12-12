@@ -2,57 +2,31 @@
 --------------------------------------------------JACOBI-----------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------
 *********************WITH CONVERGENCE**************************
-Jabobi Procs 64 Grid 8X8 Array 1024
 Jacobi X 1024 Y 1024 Px 8 Py 8 Iter 5501 ComputationTime 0.276074 TotalTime 1.616088 midpoint 0.006037
-
-Jacobi Procs 64 Grid 4X16 Array 1024
 Jacobi X 1024 Y 1024 Px 4 Py 16 Iter 9201 ComputationTime 0.461318 TotalTime 3.616059 midpoint 0.014272
-
-Jacobi Procs 64 Grid 2X32 Array 1024
 Jacobi X 1024 Y 1024 Px 2 Py 32 Iter 24401 ComputationTime 1.355190 TotalTime 14.476585 midpoint 0.045122
 
 *********************WITHOUT CONVERGENCE**************************
-Jacobi Procs 1 Array 2048
 Jacobi X 2048 Y 2048 Px 1 Py 1 Iter 256 ComputationTime 8.414824 TotalTime 8.415111 midpoint 0.000000
-Jacobi Procs 2 Array 2048
 Jacobi X 2048 Y 2048 Px 1 Py 2 Iter 256 ComputationTime 4.214169 TotalTime 4.345113 midpoint 0.189836
-Jacobi Procs 4 Array 2048
 Jacobi X 2048 Y 2048 Px 2 Py 2 Iter 256 ComputationTime 2.110261 TotalTime 2.365484 midpoint 0.195487
-Jacobi Procs 8 Array 2048
 Jacobi X 2048 Y 2048 Px 2 Py 4 Iter 256 ComputationTime 1.050316 TotalTime 1.390216 midpoint 0.186632
-Jacobi Procs 16 Array 2048
 Jacobi X 2048 Y 2048 Px 4 Py 4 Iter 256 ComputationTime 0.682240 TotalTime 1.022513 midpoint 0.098083
-Jacobi Procs 32 Array 2048
 Jacobi X 2048 Y 2048 Px 4 Py 8 Iter 256 ComputationTime 0.241929 TotalTime 0.608401 midpoint 0.093655
-Jacobi Procs 64 Array 2048
 Jacobi X 2048 Y 2048 Px 8 Py 8 Iter 256 ComputationTime 0.053723 TotalTime 0.424370 midpoint 0.049381
-Jacobi Procs 1 Array 4096
 Jacobi X 4096 Y 4096 Px 1 Py 1 Iter 256 ComputationTime 33.664324 TotalTime 33.664658 midpoint 0.000000
-Jacobi Procs 2 Array 4096
 Jacobi X 4096 Y 4096 Px 1 Py 2 Iter 256 ComputationTime 16.864459 TotalTime 17.084990 midpoint 0.379294
-Jacobi Procs 4 Array 4096
 Jacobi X 4096 Y 4096 Px 2 Py 2 Iter 256 ComputationTime 8.449692 TotalTime 9.178177 midpoint 0.390296
-Jacobi Procs 8 Array 4096
 Jacobi X 4096 Y 4096 Px 2 Py 4 Iter 256 ComputationTime 4.224078 TotalTime 5.263490 midpoint 0.372586
-Jacobi Procs 16 Array 4096
 Jacobi X 4096 Y 4096 Px 4 Py 4 Iter 256 ComputationTime 3.105760 TotalTime 4.160077 midpoint 0.195487
-Jacobi Procs 32 Array 4096
 Jacobi X 4096 Y 4096 Px 4 Py 8 Iter 256 ComputationTime 2.846075 TotalTime 3.985105 midpoint 0.186632
-Jacobi Procs 64 Array 4096
 Jacobi X 4096 Y 4096 Px 8 Py 8 Iter 256 ComputationTime 2.466673 TotalTime 3.625309 midpoint 0.098083
-Jacobi Procs 1 Array 6144
 Jacobi X 6144 Y 6144 Px 1 Py 1 Iter 256 ComputationTime 75.822431 TotalTime 75.822825 midpoint 0.000000
-Jacobi Procs 2 Array 6144
 Jacobi X 6144 Y 6144 Px 1 Py 2 Iter 256 ComputationTime 37.958558 TotalTime 38.268933 midpoint 0.568751
-Jacobi Procs 4 Array 6144
 Jacobi X 6144 Y 6144 Px 2 Py 2 Iter 256 ComputationTime 19.010525 TotalTime 20.520798 midpoint 0.585105
-Jacobi Procs 8 Array 6144
 Jacobi X 6144 Y 6144 Px 2 Py 4 Iter 256 ComputationTime 9.500421 TotalTime 11.674949 midpoint 0.558540
-Jacobi Procs 16 Array 6144
 Jacobi X 6144 Y 6144 Px 4 Py 4 Iter 256 ComputationTime 7.005902 TotalTime 9.250092 midpoint 0.292892
-Jacobi Procs 32 Array 6144
 Jacobi X 6144 Y 6144 Px 4 Py 8 Iter 256 ComputationTime 6.499480 TotalTime 8.931543 midpoint 0.279609
-Jacobi Procs 64 Array 6144
 Jacobi X 6144 Y 6144 Px 8 Py 8 Iter 256 ComputationTime 6.023940 TotalTime 8.489197 midpoint 0.146785
 
 
@@ -60,13 +34,8 @@ Jacobi X 6144 Y 6144 Px 8 Py 8 Iter 256 ComputationTime 6.023940 TotalTime 8.489
 --------------------------------------------------GAUSS-SEIDEL-----------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------
 *********************WITH CONVERGENCE**************************
-Gauss-Seidel Procs 64 Grid 8X8 Array 1024
 Gauss-Seidel X 1024 Y 1024 Px 8 Py 8 Iter 3401 ComputationTime 0.638647 TotalTime 705.528099 midpoint 0.008649
-
-Gauss-Seidel Procs 64 Grid 4X16 Array 1024
 Gauss-Seidel X 1024 Y 1024 Px 4 Py 16 Iter 6801 ComputationTime 1.219313 TotalTime 608.301620 midpoint 0.017007
-
-Gauss-Seidel Procs 64 Grid 2X32 Array 1024
 Gauss-Seidel X 1024 Y 1024 Px 2 Py 32 Iter 21301 ComputationTime 3.685116 TotalTime 2884.830547 midpoint 0.047624
 
 *********************WITHOUT CONVERGENCE**************************
@@ -79,13 +48,8 @@ Gauss-Seidel X 1024 Y 1024 Px 2 Py 32 Iter 21301 ComputationTime 3.685116 TotalT
 --------------------------------------------------RED_BLACK_SOR----------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------
 *********************WITH CONVERGENCE**************************
-Red-Black-SOR Procs 64 Grid 8X8 Array 1024
 Red-Black-SOR X 1024 Y 1024 Px 8 Py 8 Iter 2701 ComputationTime 0.375149 TotalTime 382.615470 midpoint 0.006062
-
-Red-Black-SOR Procs 64 Grid 4X16 Array 1024
 Red-Black-SOR X 1024 Y 1024 Px 4 Py 16 Iter 5401 ComputationTime 0.727532 TotalTime 752.986828 midpoint 0.013986
-
-Red-Black-SOR Procs 64 Grid 2X32 Array 1024
 Red-Black-SOR X 1024 Y 1024 Px 2 Py 32 Iter 21401 ComputationTime 2.917174 TotalTime 3451.148358 midpoint 0.043930
 
 *********************WITHOUT CONVERGENCE**************************
