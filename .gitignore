@@ -12,3 +12,10 @@ ex2/mpi/gauss_seidel_mpi_NO_conv
 ex2/mpi/gauss_seidel_mpi_conv
 ex2/mpi/temp
 ex2/temp
+
+ex2/serial/jacobi 
+ex2/serial/seidelsor 
+ex2/serial/redblacksor 
+ex2/serial/jacobi_NO_conv 
+ex2/serial/seidelsor_NO_conv 
+ex2/serial/redblacksor_NO_conv
