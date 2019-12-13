@@ -1,11 +1,11 @@
 #!/bin/bash
 
 ## Give the Job a descriptive name
-#PBS -N run_mpi_test_jacobi
+#PBS -N run_mpi
 
 ## Output and error files
-#PBS -o run_mpi_test_jacobi.out
-#PBS -e run_mpi_test_jacobi.err
+#PBS -o run_mpi_final.out
+#PBS -e run_mpi_final.err
 
 ## Limit memory, runtime etc.
 #PBS -l walltime=05:00:00
@@ -13,7 +13,7 @@
 ## How many machines should we get?
 #PBS -l nodes=8:ppn=8
 
-## Start 
+## Start
 ##echo "PBS_NODEFILE = $PBS_NODEFILE"
 ##cat $PBS_NODEFILE
 
