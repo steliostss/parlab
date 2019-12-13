@@ -1,0 +1,102 @@
+-------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------JACOBI-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------
+
+
+*********************WITH CONVERGENCE**************************
+Jacobi X 1024 Y 1024 Px 8 Py 8 Iter 5801 ComputationTime 0.291833 TotalTime 1.732106 midpoint 0.005969
+Jacobi X 1024 Y 1024 Px 4 Py 16 Iter 9101 ComputationTime 0.464307 TotalTime 3.593078 midpoint 0.014293
+Jacobi X 1024 Y 1024 Px 2 Py 32 Iter 24401 ComputationTime 1.370760 TotalTime 14.453460 midpoint 0.045122
+
+
+*********************WITHOUT CONVERGENCE**************************
+Jacobi X 2048 Y 2048 Px 1 Py 1 Iter 256 ComputationTime 8.619069 TotalTime 8.619372 midpoint 0.000000
+Jacobi X 2048 Y 2048 Px 1 Py 2 Iter 256 ComputationTime 4.336703 TotalTime 4.414571 midpoint 0.189836
+Jacobi X 2048 Y 2048 Px 2 Py 2 Iter 256 ComputationTime 2.160591 TotalTime 2.381906 midpoint 0.195487
+Jacobi X 2048 Y 2048 Px 2 Py 4 Iter 256 ComputationTime 1.060404 TotalTime 1.391534 midpoint 0.186632
+Jacobi X 2048 Y 2048 Px 4 Py 4 Iter 256 ComputationTime 0.860671 TotalTime 1.162225 midpoint 0.098083
+Jacobi X 2048 Y 2048 Px 4 Py 8 Iter 256 ComputationTime 0.307752 TotalTime 0.645700 midpoint 0.093655
+Jacobi X 2048 Y 2048 Px 8 Py 8 Iter 256 ComputationTime 0.052408 TotalTime 0.426189 midpoint 0.049381
+Jacobi X 4096 Y 4096 Px 1 Py 1 Iter 256 ComputationTime 34.634148 TotalTime 34.634547 midpoint 0.000000
+Jacobi X 4096 Y 4096 Px 1 Py 2 Iter 256 ComputationTime 17.379622 TotalTime 17.525269 midpoint 0.379294
+Jacobi X 4096 Y 4096 Px 2 Py 2 Iter 256 ComputationTime 8.733757 TotalTime 9.404010 midpoint 0.390296
+Jacobi X 4096 Y 4096 Px 2 Py 4 Iter 256 ComputationTime 4.345727 TotalTime 5.311082 midpoint 0.372586
+Jacobi X 4096 Y 4096 Px 4 Py 4 Iter 256 ComputationTime 3.746214 TotalTime 4.816226 midpoint 0.195487
+Jacobi X 4096 Y 4096 Px 4 Py 8 Iter 256 ComputationTime 3.626970 TotalTime 4.780785 midpoint 0.186632
+Jacobi X 4096 Y 4096 Px 8 Py 8 Iter 256 ComputationTime 3.196959 TotalTime 4.528502 midpoint 0.098083
+Jacobi X 6144 Y 6144 Px 1 Py 1 Iter 256 ComputationTime 77.482009 TotalTime 77.482442 midpoint 0.000000
+Jacobi X 6144 Y 6144 Px 1 Py 2 Iter 256 ComputationTime 38.850249 TotalTime 39.085728 midpoint 0.568751
+Jacobi X 6144 Y 6144 Px 2 Py 2 Iter 256 ComputationTime 19.420356 TotalTime 20.860653 midpoint 0.585105
+Jacobi X 6144 Y 6144 Px 2 Py 4 Iter 256 ComputationTime 9.782312 TotalTime 11.843624 midpoint 0.558540
+Jacobi X 6144 Y 6144 Px 4 Py 4 Iter 256 ComputationTime 8.393862 TotalTime 10.675966 midpoint 0.292892
+Jacobi X 6144 Y 6144 Px 4 Py 8 Iter 256 ComputationTime 8.329989 TotalTime 10.766621 midpoint 0.279609
+Jacobi X 6144 Y 6144 Px 8 Py 8 Iter 256 ComputationTime 7.859143 TotalTime 10.697708 midpoint 0.146785
+
+
+-------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------GAUSS-SEIDEL-----------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------
+
+
+*********************WITH CONVERGENCE**************************
+Gauss-Seidel X 1024 Y 1024 Px 8 Py 8 Iter 3401 ComputationTime 0.640368 TotalTime 2.337304 midpoint 0.008649
+Gauss-Seidel X 1024 Y 1024 Px 4 Py 16 Iter 6801 ComputationTime 1.199403 TotalTime 6.932819 midpoint 0.017007
+Gauss-Seidel X 1024 Y 1024 Px 2 Py 32 Iter 21301 ComputationTime 3.574766 TotalTime 25.660920 midpoint 0.047624
+Gauss-Seidel X 2048 Y 2048 Px 1 Py 1 Iter 256 ComputationTime 12.129215 TotalTime 12.129558 midpoint 0.000000
+ 
+Gauss-Seidel X 2048 Y 2048 Px 1 Py 2 Iter 256 ComputationTime 15.826411 TotalTime 26.394675 midpoint 0.140482
+Gauss-Seidel X 2048 Y 2048 Px 2 Py 2 Iter 256 ComputationTime 7.564776 TotalTime 20.881430 midpoint 0.208728
+Gauss-Seidel X 2048 Y 2048 Px 2 Py 4 Iter 256 ComputationTime 4.019996 TotalTime 19.584481 midpoint 0.199260
+Gauss-Seidel X 2048 Y 2048 Px 4 Py 4 Iter 256 ComputationTime 0.925272 TotalTime 11.047521 midpoint 0.104620
+Gauss-Seidel X 2048 Y 2048 Px 4 Py 8 Iter 256 ComputationTime 0.389040 TotalTime 6.768828 midpoint 0.099886
+
+Gauss-Seidel X 2048 Y 2048 Px 8 Py 8 Iter 256 ComputationTime 0.189274 TotalTime 13.409247 midpoint 0.052566
+Gauss-Seidel X 4096 Y 4096 Px 1 Py 1 Iter 256 ComputationTime 48.547022 TotalTime 48.547500 midpoint 0.000000
+Gauss-Seidel X 4096 Y 4096 Px 1 Py 2 Iter 256 ComputationTime 48.279787 TotalTime 99.044100 midpoint 0.280721
+Gauss-Seidel X 4096 Y 4096 Px 2 Py 2 Iter 256 ComputationTime 27.048080 TotalTime 70.661682 midpoint 0.416944
+Gauss-Seidel X 4096 Y 4096 Px 2 Py 4 Iter 256 ComputationTime 17.400909 TotalTime 65.369480 midpoint 0.398008
+Gauss-Seidel X 4096 Y 4096 Px 4 Py 4 Iter 256 ComputationTime 8.689809 TotalTime 41.580093 midpoint 0.208728
+Gauss-Seidel X 4096 Y 4096 Px 4 Py 8 Iter 256 ComputationTime 3.688382 TotalTime 13.506408 midpoint 0.199260
+Gauss-Seidel X 4096 Y 4096 Px 8 Py 8 Iter 256 ComputationTime 0.910992 TotalTime 19.706085 midpoint 0.104620
+Gauss-Seidel X 6144 Y 6144 Px 1 Py 1 Iter 256 ComputationTime 109.255749 TotalTime 109.256253 midpoint 0.000000
+Gauss-Seidel X 6144 Y 6144 Px 1 Py 2 Iter 256 ComputationTime 90.739795 TotalTime 182.518979 midpoint 0.420959
+Gauss-Seidel X 6144 Y 6144 Px 2 Py 2 Iter 256 ComputationTime 55.621499 TotalTime 145.182612 midpoint 0.625159
+Gauss-Seidel X 6144 Y 6144 Px 2 Py 4 Iter 256 ComputationTime 37.467290 TotalTime 115.350219 midpoint 0.596755
+Gauss-Seidel X 6144 Y 6144 Px 4 Py 4 Iter 256 ComputationTime 16.097872 TotalTime 34.125009 midpoint 0.312836
+Gauss-Seidel X 6144 Y 6144 Px 4 Py 8 Iter 256 ComputationTime 7.801941 TotalTime 18.656742 midpoint 0.298634
+Gauss-Seidel X 6144 Y 6144 Px 8 Py 8 Iter 256 ComputationTime 4.729451 TotalTime 11.790431 midpoint 0.156674
+
+
+-------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------RED_BLACK_SOR----------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------
+
+
+*********************WITH CONVERGENCE**************************
+Red-Black-SOR X 1024 Y 1024 Px 8 Py 8 Iter 2701 ComputationTime 0.363700 TotalTime 1.610495 midpoint 0.006062
+Red-Black-SOR X 1024 Y 1024 Px 4 Py 16 Iter 5401 ComputationTime 0.694617 TotalTime 4.269274 midpoint 0.013986
+Red-Black-SOR X 1024 Y 1024 Px 2 Py 32 Iter 21401 ComputationTime 2.703132 TotalTime 25.015880 midpoint 0.043930
+
+
+*********************WITHOUT CONVERGENCE**************************
+Red-Black-SOR X 2048 Y 2048 Px 1 Py 1 Iter 256 ComputationTime 21.243059 TotalTime 21.243876 midpoint 0.000000
+Red-Black-SOR X 2048 Y 2048 Px 1 Py 2 Iter 256 ComputationTime 10.623617 TotalTime 10.901287 midpoint 0.134405
+Red-Black-SOR X 2048 Y 2048 Px 2 Py 2 Iter 256 ComputationTime 5.315858 TotalTime 5.680422 midpoint 0.139186
+Red-Black-SOR X 2048 Y 2048 Px 2 Py 4 Iter 256 ComputationTime 2.653560 TotalTime 3.116011 midpoint 0.132881
+Red-Black-SOR X 2048 Y 2048 Px 4 Py 4 Iter 256 ComputationTime 1.626551 TotalTime 1.983228 midpoint 0.069833
+Red-Black-SOR X 2048 Y 2048 Px 4 Py 8 Iter 256 ComputationTime 0.553827 TotalTime 0.994784 midpoint 0.066681
+Red-Black-SOR X 2048 Y 2048 Px 8 Py 8 Iter 256 ComputationTime 0.137479 TotalTime 0.594740 midpoint 0.035157
+Red-Black-SOR X 4096 Y 4096 Px 1 Py 1 Iter 256 ComputationTime 85.202279 TotalTime 85.203282 midpoint 0.000000
+Red-Black-SOR X 4096 Y 4096 Px 1 Py 2 Iter 256 ComputationTime 42.558333 TotalTime 43.010893 midpoint 0.268541
+Red-Black-SOR X 4096 Y 4096 Px 2 Py 2 Iter 256 ComputationTime 21.307629 TotalTime 22.176921 midpoint 0.277892
+Red-Black-SOR X 4096 Y 4096 Px 2 Py 4 Iter 256 ComputationTime 10.638248 TotalTime 11.858385 midpoint 0.265283
+Red-Black-SOR X 4096 Y 4096 Px 4 Py 4 Iter 256 ComputationTime 7.590803 TotalTime 8.722995 midpoint 0.139186
+Red-Black-SOR X 4096 Y 4096 Px 4 Py 8 Iter 256 ComputationTime 7.218696 TotalTime 8.500023 midpoint 0.132881
+Red-Black-SOR X 4096 Y 4096 Px 8 Py 8 Iter 256 ComputationTime 6.258058 TotalTime 7.721514 midpoint 0.069833
+Red-Black-SOR X 6144 Y 6144 Px 1 Py 1 Iter 256 ComputationTime 191.720736 TotalTime 191.721821 midpoint 0.000000
+Red-Black-SOR X 6144 Y 6144 Px 1 Py 2 Iter 256 ComputationTime 95.779717 TotalTime 96.424149 midpoint 0.402678
+Red-Black-SOR X 6144 Y 6144 Px 2 Py 2 Iter 256 ComputationTime 47.859090 TotalTime 49.557484 midpoint 0.416598
+Red-Black-SOR X 6144 Y 6144 Px 2 Py 4 Iter 256 ComputationTime 23.946313 TotalTime 26.352578 midpoint 0.397684
+Red-Black-SOR X 6144 Y 6144 Px 4 Py 4 Iter 256 ComputationTime 16.828386 TotalTime 19.237443 midpoint 0.208539
+Red-Black-SOR X 6144 Y 6144 Px 4 Py 8 Iter 256 ComputationTime 16.688202 TotalTime 19.302792 midpoint 0.199082
+Red-Black-SOR X 6144 Y 6144 Px 8 Py 8 Iter 256 ComputationTime 15.839674 TotalTime 19.115676 midpoint 0.104510
