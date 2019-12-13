@@ -4,6 +4,8 @@
 #include <sys/time.h>
 #include "utils.h"
 
+#define TEST_CONV
+
 void RedSOR(double ** u_previous, double ** u_current, int X_min, int X_max, int Y_min, int Y_max, double omega) {
 	int i,j;
 	for (i=X_min;i<X_max;i++)
