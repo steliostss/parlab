@@ -1,4 +1,4 @@
-Method,Xsize,Ysize,Px,Py,ComputationTime,TotalTime,midpoint
+Method,Xsize,Ysize,Px,Py,Iterations,ComputationTime,TotalTime,midpoint
 
 Jacobi_conv,1024,1024,8,8,5301,0.265200,1.602939,0.006089
 Jacobi_conv,1024,1024,4,16,8901,0.446274,3.498952,0.014335
