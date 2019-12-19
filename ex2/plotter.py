@@ -3,8 +3,8 @@ import numpy as np
 import pandas as pd
 import os
 
-mpi_filepath = os.path.join(os.getcwd(), 'results', 'run_mpi_final_MAPBYNODE.csv')
-serial_filepath = os.path.join(os.getcwd(), 'results', 'run_serial.csv')
+mpi_filepath = os.path.join(os.getcwd(), 'results', './results/run_mpi_final.csv')
+serial_filepath = os.path.join(os.getcwd(), 'results', './results/run_serial.csv')
 
 mpi_data = pd.read_csv(mpi_filepath)
 serial_data = pd.read_csv(serial_filepath)
