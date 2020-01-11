@@ -93,7 +93,7 @@ int main()
 	//> Print results.
 	double secs = timer_report_sec(wall_timer);
 	double throughout = (double)total_ops / secs / 1000000.0;
-	printf("Nthreads, Runtime(sec), Throughput\n");
+//	printf("Nthreads, Runtime(sec), Throughput\n");
 //	printf("Nthreads: %d  Runtime(sec): %d  Throughput(Mops/sec): %5.2lf\n",
 	printf("%d , %d, %5.2lf\n",
 	        nthreads, RUNTIME, throughout);
