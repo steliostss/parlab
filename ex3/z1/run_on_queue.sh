@@ -15,6 +15,22 @@
 
 ## Start
 
+return_seq ()
+{
+	start=$1
+	end=$2
+	rValue=$1
+	start=`expr "$start" + 1`
+
+	while [ $start -le $end ]
+	do
+		rValue=$rValue,$start
+		start=`expr "$start" + 1`
+	done
+
+	echo $rValue
+}
+
 cd /home/parallel/parlab30/a3/z1/
 
 echo "\n-----first execution-----\n"
