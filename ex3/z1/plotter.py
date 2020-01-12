@@ -13,7 +13,7 @@ y2 = accounts_data.Throughput2
 plt.figure(figsize=(10,7))
 plt.title('1st execution Nthreads and Throughput')
 plt.xlabel('Nthreads')
-plt.ylabel('Throughput(Mops/sec)')
+plt.ylabel('Throughput (Mops/sec)')
 plt.margins(x=0.05)
 plt.xticks(x1)
 plt.plot(x1,y1,'g', marker='s')
