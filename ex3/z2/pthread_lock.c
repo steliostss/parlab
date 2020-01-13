@@ -2,6 +2,9 @@
 #include "../common/alloc.h"
 #include <pthread.h>
 
+//This seems pretty pointless, alternatively we could just define a
+//type like:
+//typedef pthread_spinlock_t lock_t
 struct lock_struct
 {
     pthread_spinlock_t spinlock;
