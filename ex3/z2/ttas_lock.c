@@ -1,9 +1,15 @@
 #include "lock.h"
 #include "../common/alloc.h"
 
-struct lock_struct {
-	/* Delete this in your implementation, just a placeholder. */
-	int dummy;
+typedef enum
+{
+    UNLOCKED = 0,
+    LOCKED
+} lock_state_t;
+
+struct lock_struct
+{
+    lock_state_t state;
 };
 
 lock_t *lock_init(int nthreads)
@@ -11,7 +17,8 @@ lock_t *lock_init(int nthreads)
 	lock_t *lock;
 
 	XMALLOC(lock, 1);
-	/* other initializations here. */
+	lock->state = UNLOCKED;
+
 	return lock;
 }
 
@@ -22,8 +29,24 @@ void lock_free(lock_t *lock)
 
 void lock_acquire(lock_t *lock)
 {
+    lock_t *l = lock;
+    while(1)
+    {
+        // Insistent read
+        while(l->state == LOCKED) /* do nothing */ ;
+
+        // Who let the dogs out
+        /*
+         * __sync_lock_test_and_set(p, v) sets *p to v and
+         * returns its previous value
+         */
+        if(__sync_lock_test_and_set(&l->state, LOCKED) == LOCKED)
+            return;
+    }
 }
 
 void lock_release(lock_t *lock)
 {
+    lock_t *l = lock;
+    __sync_lock_release(&l->state);
 }
