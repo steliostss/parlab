@@ -40,6 +40,7 @@ static ll_node_t *ll_node_new(int key)
  **/
 static void ll_node_free(ll_node_t *ll_node)
 {
+    // TODO: Consider if this should be used at all on optimistc locking
     pthread_spin_destroy(ll_node->lock);
     XFREE(ll_node->lock);
     XFREE(ll_node);
