@@ -98,24 +98,21 @@ int ll_contains(ll_t *ll, int key)
     ll_node_t *curr;
     pthread_spin_lock(ll->head->lock);
     curr = ll->head;
+    ll_node_t *succ;
+    pthread_spin_lock(curr->next->lock);
+    succ = curr->next;
 
-    while(curr->key < key)
+    while(curr->key < key && succ->key != INT_MAX)
     {
         pthread_spin_unlock(curr->lock);
-        curr = curr->next;
-        pthread_spin_lock(curr->lock);
+        curr = succ;
+        succ = succ->next;
+        pthread_spin_lock(succ->lock);
     }
-
-    if(curr->key == key)
-    {
-        pthread_spin_unlock(curr->lock);
-        return  1;
-    }
-    else
-    {
-        pthread_spin_unlock(curr->lock);
-        return 0;
-    }
+    int temp_key = curr->key;
+    pthread_spin_unlock(curr->lock);
+    pthread_spin_unlock(succ->lock);
+    return (temp_key == key);
 }
 
 int ll_add(ll_t *ll, int key)
@@ -134,13 +131,22 @@ int ll_add(ll_t *ll, int key)
 
         if(ll_validate(ll, pred, succ))
         {
-            ll_node_t  *new_node = ll_node_new(key);
-            pred->next = new_node;
-            new_node->next = succ;
+            if (succ->key != key) {
+                ll_node_t *new_node = ll_node_new(key);
+                pred->next = new_node;
+                new_node->next = succ;
 
+                pthread_spin_unlock(succ->lock);
+                pthread_spin_unlock(pred->lock);
+                return 1;
+            }
+            else
+                return 0;
+        }
+        else
+        {
             pthread_spin_unlock(succ->lock);
             pthread_spin_unlock(pred->lock);
-            return 1;
         }
     }
 }
@@ -166,7 +172,7 @@ int ll_remove(ll_t *ll, int key)
             {
                 pred->next = curr->next;
                 pthread_spin_unlock(pred->lock);
-                pthread_spin_unlock(curr->lock);
+                XFREE(curr);
                 return 1;
             }
             else
@@ -175,6 +181,11 @@ int ll_remove(ll_t *ll, int key)
                 pthread_spin_unlock(curr->lock);
                 return 0;
             }
+        }
+        else
+        {
+            pthread_spin_unlock(pred->lock);
+            pthread_spin_unlock(curr->lock);
         }
     }
 }
