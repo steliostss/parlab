@@ -37,5 +37,6 @@ void lock_release(lock_t *lock)
 	lock_t *l = lock;
 
 	/* Why not just 'l->state = UNLOCKED' here?? */
+	// RAW hazard
 	__sync_lock_release(&l->state);
 }

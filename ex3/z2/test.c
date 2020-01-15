@@ -19,7 +19,8 @@
 lock_t *lock;
 pthread_barrier_t start_barrier;
 
-#define INCS_PER_THREAD 10000
+//#define INCS_PER_THREAD 10000
+#define INCS_PER_THREAD 10
 
 void *thread_fn(void *targ);
 
@@ -78,10 +79,12 @@ void *thread_fn(void *targ)
 
 	//> Wait until master gives the green light!
 	pthread_barrier_wait(&start_barrier);
+//    printf("I'm thread no.: %lu, counter: %llu", pthread_self(), *counter);
 
 	for (i=0; i < INCS_PER_THREAD; i++) {
 		lock_acquire(lock);
-		(*counter)++;
+        (*counter)++;
+
 		lock_release(lock);
 	}
 

@@ -40,7 +40,7 @@ void lock_acquire(lock_t *lock)
          * __sync_lock_test_and_set(p, v) sets *p to v and
          * returns its previous value
          */
-        if(__sync_lock_test_and_set(&l->state, LOCKED) == LOCKED)
+        if(__sync_lock_test_and_set(&l->state, LOCKED) == UNLOCKED)
             return;
     }
 }

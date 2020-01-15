@@ -52,7 +52,7 @@ int main(int argc, char **argv)
 	list_size = atoi(argv[1]);
 
 	get_mtconf_options(&nthreads, &cpus);
-	mt_conf_print(nthreads, cpus);
+//	mt_conf_print(nthreads, cpus);
 
 	if (pthread_barrier_init(&start_barrier, NULL, nthreads+1))
 		print_error_and_exit("Failed to initialize start_barrier.\n");
@@ -96,8 +96,8 @@ int main(int argc, char **argv)
 	//> Print results.
 	double secs = timer_report_sec(wall_timer);
 	double throughout = (double)total_ops / secs / 1000.0;
-	printf("Nthreads: %d  Runtime(sec): %d  Throughput(Kops/sec): %5.2lf\n",
-	        nthreads, RUNTIME, throughout);
+	printf("%d, %d, %5.2lf, %s\n",
+	        nthreads, RUNTIME, throughout, getenv("MT_CONF"));
 
 	ll_free(ll);
 	lock_free(lock);

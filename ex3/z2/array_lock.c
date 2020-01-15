@@ -19,6 +19,8 @@ lock_t *lock_init(int nthreads)
 	lock->size = nthreads;
     XMALLOC(lock->flag, nthreads);
     lock->flag[0] = 1;
+    for (int i=1; i<nthreads; ++i)
+        lock->flag[i]=0;
     //__sync_add_and_fetch(&lock->tail, 0);
     lock->tail = 0;
 	return lock;
