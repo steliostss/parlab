@@ -23,3 +23,17 @@ ex2/serial/seidelsor_NO_conv
 ex2/serial/redblacksor_NO_conv
 
 ex3/z1/accounts
+
+ex3/z2/tas
+ex3/z2/ttas
+ex3/z2/array
+ex3/z2/nosync
+ex3/z2/pthread
+
+ex3/z3/fgl 
+ex3/z3/lazy
+ex3/z3/nb
+ex3/z3/opt
+ex3/z3/serial
+
+
