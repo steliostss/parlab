@@ -6,13 +6,6 @@ CFLAGS += -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function
 
 all: nosync pthread tas ttas array
 
-## Which lock to use?
-LOCK_FILE = nosync_lock.c
-LOCK_FILE = tas_lock.c
-LOCK_FILE = pthread_lock.c
-LOCK_FILE = ttas_lock.c
-LOCK_FILE = array_lock.c
-
 ## Additional source files
 SRC_FILES = ../common/aff.c
 
