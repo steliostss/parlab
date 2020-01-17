@@ -1,4 +1,4 @@
-Nthreads, Runtime(sec), Throughput(Kops/sec)
+Nthreads, Runtime(sec), Throughput(Kops/sec), MT_CONF
 nosync
 1, 10, 1259.12, (0)
 1, 10, 324.49, (0)
