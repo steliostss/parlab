@@ -8,8 +8,8 @@
 
 typedef struct ll_node {
     int key;
-    struct ll_node *next;
     pthread_spinlock_t *lock;
+    struct ll_node *next;
 } ll_node_t;
 
 struct linked_list {
@@ -17,9 +17,6 @@ struct linked_list {
 	/* other fields here? */
 };
 
-/**
- * Create a new linked list node.
- **/
 static ll_node_t *ll_node_new(int key)
 {
     ll_node_t *ret;
@@ -34,10 +31,6 @@ static ll_node_t *ll_node_new(int key)
     return ret;
 }
 
-
-/**
- * Free a linked list node.
- **/
 static void ll_node_free(ll_node_t *ll_node)
 {
     // TODO: Consider if this should be used at all on optimistc locking
@@ -46,10 +39,6 @@ static void ll_node_free(ll_node_t *ll_node)
     XFREE(ll_node);
 }
 
-
-/**
- * Create a new empty linked list.
- **/
 ll_t *ll_new()
 {
     ll_t *ret;
@@ -62,9 +51,6 @@ ll_t *ll_new()
     return ret;
 }
 
-/**
- * Free a linked list and all its contained nodes.
- **/
 void ll_free(ll_t *ll)
 {
 	ll_node_t *next, *curr = ll->head;
@@ -76,7 +62,6 @@ void ll_free(ll_t *ll)
 	XFREE(ll);
 }
 
-// Copied from lecture slides
 static int ll_validate(ll_t *ll, ll_node_t * pred, ll_node_t *curr)
 {
     ll_node_t *node = ll->head;
@@ -92,7 +77,6 @@ static int ll_validate(ll_t *ll, ll_node_t * pred, ll_node_t *curr)
     return 0;
 }
 
-// This is the same as in ll_fgl.c
 int ll_contains(ll_t *ll, int key)
 {
     ll_node_t *curr;
@@ -129,25 +113,23 @@ int ll_add(ll_t *ll, int key)
         pthread_spin_lock(pred->lock);
         pthread_spin_lock(succ->lock);
 
+        int retval = 0;
         if(ll_validate(ll, pred, succ))
         {
-            if (succ->key != key) {
+            if (succ->key != key)
+            {
                 ll_node_t *new_node = ll_node_new(key);
                 pred->next = new_node;
                 new_node->next = succ;
-
-                pthread_spin_unlock(succ->lock);
-                pthread_spin_unlock(pred->lock);
-                return 1;
+                retval = 1;
             }
             else
-                return 0;
+                retval = 0;
         }
-        else
-        {
-            pthread_spin_unlock(succ->lock);
-            pthread_spin_unlock(pred->lock);
-        }
+    
+        pthread_spin_unlock(succ->lock);
+        pthread_spin_unlock(pred->lock);
+        return retval;
     }
 }
 
