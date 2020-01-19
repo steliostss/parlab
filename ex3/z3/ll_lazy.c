@@ -151,7 +151,7 @@ int ll_remove(ll_t *ll, int key)
 				curr->marked = 1;
                 pred->next = curr->next;
                 pthread_spin_unlock(pred->lock);
-                XFREE(curr);
+                ll_node_free(curr);
                 return 1;
             }
             else
