@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
-
 #include "../common/aff.h"
 #include "../common/timer.h"
 #include "ll.h"
