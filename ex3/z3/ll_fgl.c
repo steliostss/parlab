@@ -122,12 +122,15 @@ int ll_add(ll_t *ll, int key)
         ll_node_t *new_node = ll_node_new(key);
         pred->next = new_node;
         new_node->next = succ;
-
         pthread_spin_unlock(succ->lock);
         pthread_spin_unlock(pred->lock);
         return 1;
     }
-    return 0;
+    else {
+        pthread_spin_unlock(succ->lock);
+        pthread_spin_unlock(pred->lock);
+        return 0;
+    }
 }
 
 // Copied from lecture slides
@@ -143,8 +146,8 @@ int ll_remove(ll_t *ll, int key)
     {
         pthread_spin_unlock(pred->lock);
         pred = curr;
+        pthread_spin_lock(curr->next->lock);
         curr = curr->next;
-        pthread_spin_lock(curr->lock);
     }
 
     if(curr->key == key)
@@ -152,7 +155,6 @@ int ll_remove(ll_t *ll, int key)
         pred->next = curr->next;
         ll_node_free(curr);
         pthread_spin_unlock(pred->lock);
-        printf("remove end\n");
         return 1;
     } else
     {
