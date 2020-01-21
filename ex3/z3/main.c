@@ -56,7 +56,7 @@ int main(int argc, char **argv)
 		print_error_and_exit("The total percentage of operations is not 100%%!\n");
 
 	get_mtconf_options(&nthreads, &cpus);
-	mt_conf_print(nthreads, cpus);
+//	mt_conf_print(nthreads, cpus);
 
 	if (pthread_barrier_init(&start_barrier, NULL, nthreads+1))
 		print_error_and_exit("Failed to initialize start_barrier.\n");
