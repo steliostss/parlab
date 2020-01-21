@@ -126,7 +126,7 @@ int ll_add(ll_t *ll, int key)
             else
                 retval = 0;
         }
-    
+
         pthread_spin_unlock(succ->lock);
         pthread_spin_unlock(pred->lock);
         return retval;

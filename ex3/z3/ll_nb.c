@@ -183,11 +183,6 @@ int ll_add(ll_t *ll, int key)
             ll_node_t *node = ll_node_new(key);
             node->field = COMBINE(curr, 0);
 
-//            if (compare_and_set(
-//                    GETNEXTPOINTER(pred),
-//                    COMBINE(curr, 0),
-//                    COMBINE(node, 0)
-//            )) return 1;
             int val = __sync_bool_compare_and_swap(&pred->field, COMBINE(curr,0), COMBINE(node,0));
             return val;
         }
