@@ -24,6 +24,5 @@ opt: main.c ll_opt.c ${SRC_FILES}
 serial: main.c ll_serial.c ${SRC_FILES}
 	$(CC) $(CFLAGS) $^ -o $@
 
-
 clean:
 	rm -f fgl lazy nb opt serial
