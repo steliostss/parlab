@@ -6,13 +6,13 @@
 
 /*
  * This is defined mainly to distinct variables declared for use as combinations of
- * pointer and marking bit.
+ * point64_ter and marking bit.
  */
-typedef int comb_t;
+typedef int64_t comb_t;
 
 typedef struct ll_node {
     int key;
-    comb_t field; // Next node pointer + "marked" bit
+    comb_t field; // Next node point64_ter + "marked" bit
 } ll_node_t;
 
 /*
@@ -20,27 +20,30 @@ typedef struct ll_node {
  * using the combined type. The 2 last ones get an entire
  * node and do the extraction.
  */
-#define COMBINE(P, B) ((comb_t)((int)P | B))
-#define GETNEXTPOINTER(N) ((ll_node_t *)(N->field & 0xfffffffe))
-#define GETMARKEDBIT(N) (N->field & 0x00000001)
+#define LSB_MASK 0x0000000000000001
+#define BIT_MASK 0xfffffffffffffffe
+#define COMBINE(P, B) ((comb_t)((int64_t)P | B))
+#define GETNEXTPOINTER(N) ((ll_node_t *)(N->field & BIT_MASK))
+#define GETMARKEDBIT(N) (N->field & LSB_MASK)
 
 // Similar to the get() method of the java atomic reference class
-static ll_node_t *getnextandcheck(ll_node_t *n, int *marked)
+static ll_node_t *getnextandcheck(ll_node_t *n, int64_t *marked)
 {
     // Get the field out first in order to perform both operations on the same value.
     comb_t f = n->field;
-    marked[0] = f & 0x00000001;
+    marked[0] = f & LSB_MASK;
 
-    return (ll_node_t *)(f & 0xfffffffe);
+    return (ll_node_t *)(f & BIT_MASK);
 }
 
 /*
  * Similar to the compareAndSet() method in Java, checks if node->field == expected and on
  * success sets it to update. Returns 1 on sucess.
  */
-static int compare_and_set(ll_node_t *node, comb_t expected, comb_t update)
+static int64_t compare_and_set(ll_node_t *node, comb_t expected, comb_t update)
 {
-    return __sync_bool_compare_and_swap(&node->field, expected, update);
+    int val = __sync_bool_compare_and_swap(&node, expected, update);
+    return val;
 }
 
 struct linked_list {
@@ -60,7 +63,7 @@ typedef struct window
 static window_t *find(ll_t *ll, int key)
 {
     ll_node_t *pred, *curr, *succ;
-    int marked[1] = {0};
+    int64_t marked[1] = {0};
 retry: while (1)
     {
         pred = ll->head;
@@ -71,11 +74,7 @@ retry: while (1)
             succ = getnextandcheck(curr, marked);
             while (marked[0])
             {
-                int snip = compare_and_set(
-                        GETNEXTPOINTER(pred),
-                        COMBINE(curr, 0),
-                        COMBINE(succ, 0)
-                );
+                int64_t snip  = __sync_bool_compare_and_swap(&pred->field, COMBINE(curr,0), COMBINE(succ,0));
 
                 if(!snip) goto retry;
                 curr = succ;
@@ -150,7 +149,7 @@ void ll_free(ll_t *ll)
 
 int ll_contains(ll_t *ll, int key)
 {
-    int marked[1] = {0};
+    int64_t marked[1] = {0};
     ll_node_t *curr = ll->head;
     while (curr->key < key)
     {
@@ -159,7 +158,8 @@ int ll_contains(ll_t *ll, int key)
 
     // *succ is defined in lesson slides, but never used
     ll_node_t *succ = getnextandcheck(curr, marked);
-	return (curr->key == key && !marked[0]);
+	int val = (curr->key == key && !marked[0]);
+    return val;
 
 	// Alternatively:
 	// return (curr->key == key && !GETMARKEDBIT(curr))
@@ -168,7 +168,7 @@ int ll_contains(ll_t *ll, int key)
 int ll_add(ll_t *ll, int key)
 {
     // Lesson slides define a bool that is never used here:
-    // int splice
+    // int64_t splice
     while (1)
     {
         window_t *window = find(ll, key);
@@ -183,18 +183,20 @@ int ll_add(ll_t *ll, int key)
             ll_node_t *node = ll_node_new(key);
             node->field = COMBINE(curr, 0);
 
-            if (compare_and_set(
-                    GETNEXTPOINTER(pred),
-                    COMBINE(curr, 0),
-                    COMBINE(node, 0)
-            )) return 1;
+//            if (compare_and_set(
+//                    GETNEXTPOINTER(pred),
+//                    COMBINE(curr, 0),
+//                    COMBINE(node, 0)
+//            )) return 1;
+            int val = __sync_bool_compare_and_swap(&pred->field, COMBINE(curr,0), COMBINE(node,0));
+            return val;
         }
     }
 }
 
 int ll_remove(ll_t *ll, int key)
 {
-    int snip;
+    int64_t snip;
     while (1)
     {
         window_t *window = find(ll, key);
@@ -207,26 +209,21 @@ int ll_remove(ll_t *ll, int key)
         else
         {
             ll_node_t *succ = GETNEXTPOINTER(curr);
-            snip = compare_and_set(
-                    GETNEXTPOINTER(curr),
-                    COMBINE(succ, 0),
-                    COMBINE(succ, 1)
-                    );
+
+            snip = __sync_bool_compare_and_swap(&curr->field, COMBINE(succ,0), COMBINE(succ,1));
             if(!snip) continue;
-            compare_and_set(
-                    GETNEXTPOINTER(pred),
-                    COMBINE(curr, 0),
-                    COMBINE(succ, 0)
-                    );
+
+            __sync_bool_compare_and_swap(&pred->field, COMBINE(curr,0), COMBINE(succ,0));
+
             return 1;
         }
     }
 }
 
 /**
- * Print a linked list.
+ * Print64_t a linked list.
  **/
-void ll_print(ll_t *ll)
+void ll_print64_t(ll_t *ll)
 {
 	ll_node_t *curr = ll->head;
 	printf("LIST [");
