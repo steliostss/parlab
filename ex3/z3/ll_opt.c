@@ -64,13 +64,12 @@ void ll_free(ll_t *ll)
 
 static int ll_validate(ll_t *ll, ll_node_t * pred, ll_node_t *curr)
 {
+    printf("validate\n");
     ll_node_t *node = ll->head;
     while(node->key <= pred->key)
     {
         if(node == pred)
-        {
             return pred->next == curr;
-        }
         node = node->next;
     }
 
@@ -101,6 +100,7 @@ int ll_contains(ll_t *ll, int key)
 
 int ll_add(ll_t *ll, int key)
 {
+    printf("add\n");
     while(1)
     {
         ll_node_t *pred = ll->head;
@@ -135,6 +135,7 @@ int ll_add(ll_t *ll, int key)
 
 int ll_remove(ll_t *ll, int key)
 {
+    printf("remove\n");
     while(1)
     {
         ll_node_t *pred = ll->head;
