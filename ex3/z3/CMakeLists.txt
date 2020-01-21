@@ -4,8 +4,9 @@ set(CMAKE_C_FLAGS "-Wall -Wextra -pthread -Wno-unused-parameter -Wno-unused-vari
 
 #set(LL_FILE ll_fgl.c)
 #set(LL_FILE ll_lazy.c)
-set(LL_FILE ll_nb.c)
-#set(LL_FILE ll_opt.c)
+#set(LL_FILE ll_nb.c)
+#set(LL_FILE old_ll_opt.c)
+set(LL_FILE ll_opt.c)
 #set(LL_FILE ll_serial.c)
 
 set(SRC_FILES  ../common/aff.c)
