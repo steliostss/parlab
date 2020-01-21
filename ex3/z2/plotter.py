@@ -1,35 +1,22 @@
-import matplotlib.pyplot as plt
-import numpy as np
+import os
 import pandas as pd
+import matplotlib.pyplot as plt
 
-question1 = "./results/question1.csv"
-accounts_data = pd.read_csv(question1)
+filedir = os.path.join(os.getcwd(), 'results')
 
-x1 = accounts_data.Nthreads1
-y1 = accounts_data.Throughput1
-x2 = accounts_data.Nthreads2
-y2 = accounts_data.Throughput2
+files = ['nosync', 'array', 'pthread', 'tas', 'ttas']
+for f in files:
+    path = os.path.join(filedir, f + '.csv')
+    df = pd.read_csv(path, usecols=[0, 1, 2])
 
-plt.figure(figsize=(10,7))
-plt.title('1st execution Nthreads and Throughput')
-plt.xlabel('Nthreads')
-plt.ylabel('Throughput (Mops/sec)')
-plt.margins(x=0.05)
-plt.xticks(x1)s
-plt.plot(x1,y1,'g', marker='s')
-# for a,b in zip(x1,y1):
-#     plt.text(a,b,str(b))
+    plt.figure(f, figsize=(12, 9))
+    for i in range(0, 3):
+        x, y = df.iloc[i::3, 0], df.iloc[i::3, 2]
+        plt.plot(x, y, 'o-')
+        plt.xticks(x)
 
-plt.savefig('./results/1stExecution.png')
-
-plt.figure(figsize=(10,7))
-plt.title('2nd execution Nthreads and Throughput')
-plt.xlabel('Nthreads')
-plt.ylabel('Throughput (Mops/sec)')
-plt.margins(x=0.05)
-plt.xticks(x2)
-plt.plot(x2,y2,'b', marker='s')
-# for a,b in zip(x1,y1):
-#     plt.text(a,b,str(b))
-
-plt.savefig('./results/2ndExecution.png')
+    plt.title(f.title() + ' Lock')
+    plt.ylabel('Throughput (Kops/s)')
+    plt.xlabel('Thread Count')
+    plt.legend(['List Size ' + k for k in ['16', '1024', '8192']])
+    plt.savefig(os.path.join(filedir, f + '.png'))
