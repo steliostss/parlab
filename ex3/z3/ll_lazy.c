@@ -18,9 +18,6 @@ struct linked_list {
 	ll_node_t *head;
 };
 
-/**
- * Create a new linked list node.
- **/
 static ll_node_t *ll_node_new(int key)
 {
 	ll_node_t *ret;
@@ -35,9 +32,6 @@ static ll_node_t *ll_node_new(int key)
 	return ret;
 }
 
-/**
- * Free a linked list node.
- **/
 static void ll_node_free(ll_node_t *ll_node)
 {
     // TODO: Consider if this should be used at all on optimistc locking
@@ -46,9 +40,6 @@ static void ll_node_free(ll_node_t *ll_node)
     XFREE(ll_node);
 }
 
-/**
- * Create a new empty linked list.
- **/
 ll_t *ll_new()
 {
 	ll_t *ret;
@@ -61,9 +52,6 @@ ll_t *ll_new()
 	return ret;
 }
 
-/**
- * Free a linked list and all its contained nodes.
- **/
 void ll_free(ll_t *ll)
 {
 	ll_node_t *next, *curr = ll->head;
@@ -169,9 +157,6 @@ int ll_remove(ll_t *ll, int key)
     }
 }
 
-/**
- * Print a linked list.
- **/
 void ll_print(ll_t *ll)
 {
 	ll_node_t *curr = ll->head;

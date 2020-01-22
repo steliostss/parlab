@@ -173,9 +173,6 @@ int ll_remove(ll_t *ll, int key)
     }
 }
 
-/**
- * Print a linked list.
- **/
 void ll_print(ll_t *ll)
 {
 	ll_node_t *curr = ll->head;
