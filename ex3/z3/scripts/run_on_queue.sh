@@ -53,6 +53,7 @@ parallel_locks()
 {
   cpus=$1
   length="${#executables[@]}"
+  counter=0
   for ((i=0; i<$((length)); i++))
   do
     while [ $((counter+1)) -le ${#percentages[@]} ]
@@ -83,5 +84,5 @@ serial_locks()
   done
 }
 
-serial_locks 1
-parallel_locks 64
+#serial_locks 1
+parallel_locks 4
