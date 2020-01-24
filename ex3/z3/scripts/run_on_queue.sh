@@ -1,23 +1,20 @@
 #!/bin/bash
 
 ## Give the Job a descriptive name
-#PBS -N make_locks_z3
+#PBS -N run_locks
 
 ## Output and error files
-#PBS -o make_locks_z3.out
-#PBS -e make_locks_z3.err
+#PBS -o run_locks.out
+#PBS -e run_locks.err
 
 ## How many machines should we get?
-#PBS -l nodes=1:ppn=1
+#PBS -l nodes=sandman:ppn=64
 
 ##How long should the job run for?
-#PBS -l walltime=00:10:00
+#PBS -l walltime=05:00:00
 
-## Start
-## Run make in the src folder (modify properly)
-
-#path="/home//parlab30/a3/z3/"
-path="/media/stelios/Storage/Documents/ECE/Hardware/Parallel_Processing_Systems/parlab/ex3/z3"
+path="/home/parallel/parlab30/a3/z3/"
+#path="/mnt/Storage/Documents/ECE/Hardware/Parallel_Processing_Systems/parlab/ex3/z3"
 cd "$path" || exit
 
 echo "Nthreads, Throughput(Kops/sec), Runtime(sec), Workload, MT_CONF"
@@ -55,18 +52,19 @@ start_execution ()
 parallel_locks()
 {
   cpus=$1
-  counter=0
-  for i in "${executables[@]}"
+  length="${#executables[@]}"
+  for ((i=0; i<$((length)); i++))
   do
     while [ $((counter+1)) -le ${#percentages[@]} ]
     do
       for j in "${list_sizes[@]}"
       do
-        printf "%s %s\n" "$i" "$j"
-        start_execution "$i" "$cpus" "$j" "${percentages[$counter]}" "${percentages[$((counter+1))]}" "${percentages[$((counter+2))]}"
+        printf "%s %s\n" "${executables[i]}" "$j"
+        start_execution "${executables[i]}" "$cpus" "$j" "${percentages[$counter]}" "${percentages[$((counter+1))]}" "${percentages[$((counter+2))]}"
       done
     counter=$((counter+3))
     done
+    counter=0
   done
 }
 
