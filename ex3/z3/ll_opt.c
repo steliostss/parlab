@@ -7,9 +7,10 @@
 #include "ll.h"
 
 typedef struct ll_node {
-    int key;
-    pthread_spinlock_t *lock;
-    struct ll_node *next;
+	int key;
+	struct ll_node *next;
+	pthread_spinlock_t *lock;
+	/* other fields here? */
 } ll_node_t;
 
 struct linked_list {
@@ -17,40 +18,50 @@ struct linked_list {
 	/* other fields here? */
 };
 
+/**
+ * Create a new linked list node.
+ **/
 static ll_node_t *ll_node_new(int key)
 {
-    ll_node_t *ret;
+	ll_node_t *ret;
 
-    XMALLOC(ret, 1);
-    ret->key = key;
-    ret->next = NULL;
-    XMALLOC(ret->lock, 1);  //Clang-Tidy gives warning about this
-    pthread_spin_init(ret->lock, PTHREAD_PROCESS_PRIVATE);
-    /* Other initializations here? */
+	XMALLOC(ret, 1);
+	ret->key = key;
+	ret->next = NULL;
+	pthread_spin_init(&(ret->lock),PTHREAD_PROCESS_SHARED);
 
-    return ret;
+	/* Other initializations here? */
+
+	return ret;
 }
 
+/**
+ * Free a linked list node.
+ **/
 static void ll_node_free(ll_node_t *ll_node)
 {
-    // TODO: Consider if this should be used at all on optimistc locking
-    pthread_spin_destroy(ll_node->lock);
-    XFREE(ll_node->lock);
-    XFREE(ll_node);
+	pthread_spin_destroy(&(ll_node->lock));
+	XFREE(ll_node);
 }
 
+/**
+ * Create a new empty linked list.
+ **/
 ll_t *ll_new()
 {
-    ll_t *ret;
+	ll_t *ret;
 
-    XMALLOC(ret, 1);
-    ret->head = ll_node_new(-1);
-    ret->head->next = ll_node_new(INT_MAX);
-    ret->head->next->next = NULL;
+	XMALLOC(ret, 1);
+	ret->head = ll_node_new(-1);
+	ret->head->next = ll_node_new(INT_MAX);
+	ret->head->next->next = NULL;
 
-    return ret;
+	return ret;
 }
 
+/**
+ * Free a linked list and all its contained nodes.
+ **/
 void ll_free(ll_t *ll)
 {
 	ll_node_t *next, *curr = ll->head;
@@ -62,117 +73,123 @@ void ll_free(ll_t *ll)
 	XFREE(ll);
 }
 
-static int ll_validate(ll_t *ll, ll_node_t * pred, ll_node_t *curr)
-{
-    printf("validate\n");
-    ll_node_t *node = ll->head;
-    while(node->key <= pred->key)
-    {
-        if(node == pred)
-            return pred->next == curr;
-        node = node->next;
-    }
-
-    return 0;
+int validate(ll_node_t *curr,ll_node_t *next,ll_t *list) {
+	ll_node_t *node=list->head;
+	int ret=0;
+	while (node->key <= curr->key) {
+		if (node == curr) {
+			ret= (curr->next == next);
+			break;
+		}
+		node = node->next;
+	}
+	return ret;
 }
+
 
 int ll_contains(ll_t *ll, int key)
 {
-    ll_node_t *curr;
-    pthread_spin_lock(ll->head->lock);
-    curr = ll->head;
-    ll_node_t *succ;
-    pthread_spin_lock(curr->next->lock);
-    succ = curr->next;
+	int ret=0;
+	ll_node_t *curr,*next;
 
-    while(curr->key < key && succ->key != INT_MAX)
-    {
-        pthread_spin_unlock(curr->lock);
-        curr = succ;
-        succ = succ->next;
-        pthread_spin_lock(succ->lock);
-    }
-    int temp_key = curr->key;
-    pthread_spin_unlock(curr->lock);
-    pthread_spin_unlock(succ->lock);
-    return (temp_key == key);
+	while(1){
+		curr=ll->head;
+		next=ll->head->next;
+		while (next->key <= key) {
+			curr = next;
+			next = next->next;
+		}
+		pthread_spin_lock(&(curr->lock));
+		pthread_spin_lock(&(next->lock));
+		if (validate(curr,next,ll)) {
+			if(next->key == key) {
+				ret = 1;
+			}
+			//ret= (key == next->key);
+			pthread_spin_unlock(&(curr->lock));
+			pthread_spin_unlock(&(next->lock));
+			break;
+		}
+		pthread_spin_unlock(&(curr->lock));
+		pthread_spin_unlock(&(next->lock));
+	}
+	return ret;
 }
 
 int ll_add(ll_t *ll, int key)
 {
-    printf("add\n");
-    while(1)
-    {
-        ll_node_t *pred = ll->head;
-        ll_node_t *succ = pred->next;
-        while(succ->key < key)
-        {
-            pred = succ;
-            succ = succ->next;
-        }
-        pthread_spin_lock(pred->lock);
-        pthread_spin_lock(succ->lock);
+	int ret=0;
+	ll_node_t *curr,*next;
+	ll_node_t *new_node;
 
-        int retval = 0;
-        if(ll_validate(ll, pred, succ))
-        {
-            if (succ->key != key)
-            {
-                ll_node_t *new_node = ll_node_new(key);
-                pred->next = new_node;
-                new_node->next = succ;
-                retval = 1;
-            }
-            else
-                retval = 0;
-        }
-
-        pthread_spin_unlock(succ->lock);
-        pthread_spin_unlock(pred->lock);
-        return retval;
-    }
+	while (1) {
+		curr=ll->head;
+		next=ll->head->next;
+		while (next->key <= key) {
+			curr=next;
+			next=next->next;
+		}
+		pthread_spin_lock(&(curr->lock));
+		pthread_spin_lock(&(next->lock));
+		if (validate(curr,next,ll)) {
+			if (next->key != key) {
+				ret = 1;
+				new_node=ll_node_new(key);
+				new_node->next=next;
+				curr->next=new_node;
+			}
+			else {
+				ret = 0;
+			}
+			pthread_spin_unlock(&(curr->lock));
+			pthread_spin_unlock(&(next->lock));
+			break;
+		}
+		pthread_spin_unlock(&(curr->lock));
+		pthread_spin_unlock(&(next->lock));
+	}
+	return ret;
 }
 
 int ll_remove(ll_t *ll, int key)
 {
-    printf("remove\n");
-    while(1)
-    {
-        ll_node_t *pred = ll->head;
-        ll_node_t *curr = pred->next;
-        while(curr->key <= key)
-        {
-            if(curr->key == key) break;
-            pred = curr;
-            curr = curr->next;
-        }
-        pthread_spin_lock(pred->lock);
-        pthread_spin_lock(curr->lock);
+	int ret=0;
+	ll_node_t *curr,*next;
 
-        if(ll_validate(ll, pred, curr))
-        {
-            if(curr->key == key)
-            {
-                pred->next = curr->next;
-                pthread_spin_unlock(pred->lock);
-                ll_node_free(curr);
-                return 1;
-            }
-            else
-            {
-                pthread_spin_unlock(pred->lock);
-                pthread_spin_unlock(curr->lock);
-                return 0;
-            }
-        }
-        else
-        {
-            pthread_spin_unlock(pred->lock);
-            pthread_spin_unlock(curr->lock);
-        }
-    }
+	while(1) {
+		curr=ll->head;
+		next=ll->head->next;
+		while (next->key <= key) {
+			if (key == next->key) break;
+			curr=next;
+			next=next->next;
+		}
+		pthread_spin_lock(&(curr->lock));
+		pthread_spin_lock(&(next->lock));
+		if (validate(curr,next,ll)) {
+			if (key == next->key){
+				ret = 1;
+				curr->next = next->next;
+				pthread_spin_unlock(&(curr->lock));
+				pthread_spin_unlock(&(next->lock));
+				ll_node_free(next);
+			}
+			else {
+				ret = 0;
+				pthread_spin_unlock(&(curr->lock));
+				pthread_spin_unlock(&(next->lock));
+			}
+			break;
+		}
+		pthread_spin_unlock(&(curr->lock));
+		pthread_spin_unlock(&(next->lock));
+	}
+	return ret;
 }
 
+/**
+ * Print a linked list.
+ **/
 void ll_print(ll_t *ll)
 {
 	ll_node_t *curr = ll->head;

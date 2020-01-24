@@ -86,4 +86,4 @@ serial_locks()
 }
 
 serial_locks 1
-parallel_locks 4
+parallel_locks 64
