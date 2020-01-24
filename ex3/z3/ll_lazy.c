@@ -65,60 +65,65 @@ void ll_free(ll_t *ll)
 
 static int ll_validate(ll_t *ll, ll_node_t * pred, ll_node_t *curr)
 {
-	return(pred->next == curr && pred->marked == 0 && pred->next->marked == 0);
+	return(pred->next == curr && !pred->marked && !curr->marked);
 }
 
 int ll_contains(ll_t *ll, int key)
 {
+    printf("contains\n");
     ll_node_t *curr;
     curr = ll->head;
-    ll_node_t *succ;
-    succ = curr->next;
 
     while(curr->key < key)
-	{
-		curr = succ;
-		succ = succ->next;
-	}
-	return (curr->marked == 0 && curr->key == key);
+		curr = curr->next;
+
+	return ( !curr->marked && curr->key == key);
 }
 
 int ll_add(ll_t *ll, int key)
 {
-	while(1)
+    printf("add\n");
+    while(1)
     {
         ll_node_t *pred = ll->head;
-        ll_node_t *succ = pred->next;
-        while(succ->key < key)
+        ll_node_t *curr = pred->next;
+        while(curr->key <= key)
         {
-            pred = succ;
-            succ = succ->next;
+            if (curr->key == key)
+                break;
+            pred = curr;
+            curr = curr->next;
         }
-		int retval = 0;
-        if(ll_validate(ll, pred, succ))
+        pthread_spin_lock(pred->lock);
+        pthread_spin_lock(curr->lock);
+        if(ll_validate(ll, pred, curr))
         {
-			pthread_spin_lock(pred->lock);
-	        pthread_spin_lock(succ->lock);
-
-            if (succ->key != key) 
+            if (curr->key != key)
 			{
                 ll_node_t *new_node = ll_node_new(key);
                 pred->next = new_node;
-                new_node->next = succ;
-				retval = 1;
+                new_node->next = curr;
+                pthread_spin_unlock(curr->lock);
+                pthread_spin_unlock(pred->lock);
+                return 1;
             }
-            else
-				retval = 0;
-
-			pthread_spin_unlock(succ->lock);
-			pthread_spin_unlock(pred->lock);
+            else {
+                pthread_spin_unlock(curr->lock);
+                pthread_spin_unlock(pred->lock);
+                return 0;
+            }
         }
-		return retval;
+        else
+        {
+            pthread_spin_unlock(curr->lock);
+            pthread_spin_unlock(pred->lock);
+        }
     }
 }
 
 int ll_remove(ll_t *ll, int key)
 {
+    printf("remove\n");
     while(1)
     {
         ll_node_t *pred = ll->head;
@@ -132,6 +137,7 @@ int ll_remove(ll_t *ll, int key)
         pthread_spin_lock(pred->lock);
         pthread_spin_lock(curr->lock);
 
+        int retval = 0;
         if(ll_validate(ll, pred, curr))
         {
             if(curr->key == key)
@@ -139,21 +145,19 @@ int ll_remove(ll_t *ll, int key)
 				curr->marked = 1;
                 pred->next = curr->next;
                 pthread_spin_unlock(pred->lock);
+                pthread_spin_unlock(curr->lock);
                 ll_node_free(curr);
-                return 1;
+                retval = 1;
             }
             else
             {
                 pthread_spin_unlock(pred->lock);
                 pthread_spin_unlock(curr->lock);
-                return 0;
             }
+            return retval;
         }
-        else
-        {
-            pthread_spin_unlock(pred->lock);
-            pthread_spin_unlock(curr->lock);
-        }
+        pthread_spin_unlock(pred->lock);
+        pthread_spin_unlock(curr->lock);
     }
 }
 
