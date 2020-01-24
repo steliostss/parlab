@@ -1,4 +1,4 @@
-Nthreads, Throughput(Kops/sec), Runtime(sec), Workload, MT_CONF
+Nthreads, Throughput(Kops/sec), Runtime(sec), Workload, List_size
 
 1, 489.93, 10, (80/10/10), 1024
 1, 46.07, 10, (80/10/10), 8192
