@@ -1,0 +1,28 @@
+==> level <==
+1
+==> type <==
+Data
+==> size <==
+32K
+
+==> level <==
+1
+==> type <==
+Instruction
+==> size <==
+32K
+
+==> level <==
+2
+==> type <==
+Unified
+==> size <==
+256K
+
+==> level <==
+3
+==> type <==
+Unified
+==> size <==
+16384K
+
