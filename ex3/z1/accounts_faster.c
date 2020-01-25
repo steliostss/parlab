@@ -69,7 +69,7 @@ int main()
 		threads_data[i].tid = i;
 		threads_data[i].cpu = cpus[i];
 		threads_data[i].ops = 0;
-		threads_data[i].offset = off-1;
+		threads_data[i].offset = i*(off-1);
 		if (pthread_create(&threads[i], NULL, thread_fn, &threads_data[i]))
 			print_error_and_exit("Error creating thread %d.\n", i);
 	}
