@@ -15,7 +15,7 @@
 
 ## Start
 
-executables=("accounts accounts_faster")
+executables=("accounts" "accounts_faster")
 
 return_seq ()
 {
