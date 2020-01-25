@@ -16,14 +16,14 @@ for f in files:
 
     plt.figure(f, figsize=(12, 9))
     for i in range(0, 2):
-        x = df.iloc[i::2, 0] 
+        x = df.iloc[i::2, 0]
         y = df.iloc[i::2, 1]
         plt.plot(x, y, 'o-')
         plt.xticks(x)
         # for a,b in zip(x,y):
         #     plt.text((a+1),(b+5),str(b))
 
-        
+
     plt.title(f.title() + ' Lock')
     plt.ylabel('Throughput (Kops/s)')
     plt.xlabel('Thread Count')
