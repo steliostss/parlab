@@ -20,8 +20,8 @@ for f in files:
         y = df.iloc[i::2, 1]
         plt.plot(x, y, 'o-')
         plt.xticks(x)
-        for a,b in zip(x,y):
-            plt.text((a+1),(b+5),str(b))
+        # for a,b in zip(x,y):
+        #     plt.text((a+1),(b+5),str(b))
 
         
     plt.title(f.title() + ' Lock')
