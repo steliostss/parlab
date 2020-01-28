@@ -4,7 +4,7 @@ DEBUG ?= 1
 CC ?= gcc
 RM = /bin/rm
 
-MAKE_CPPFLAGS = 
+MAKE_CPPFLAGS =
 MAKE_CFLAGS = -c -Wall -std=gnu99
 
 ifeq ($(DEBUG), 1)
@@ -32,5 +32,5 @@ common_OBJECTS = $(common_SOURCES:%.c=%.o)
 
 all: $(common_OBJECTS)
 
-clean:	
+clean:
 	$(RM) -f  *.o *.s *~
